@@ -1,0 +1,3281 @@
+<title>Early Retirement Income &amp; Cost Planner</title>
+
+<style>
+  :root {
+    --ground: #f6f8f5;
+    --surface: #ffffff;
+    --surface-2: #eef2ee;
+    --ink: #151e19;
+    --ink-2: #35443c;
+    --muted: #5c6b63;
+    --line: #dfe5df;
+    --line-strong: #c6d0c8;
+    --accent: #0f6b5c;
+    --accent-soft: #dcece7;
+    --saved: #4a6fa5;
+    --saved-2: #7a94c4;
+    --tax-ord: #a8641f;
+    --tax-pref: #c79a62;
+    --tax-niit: #7a4b63;
+    --tax-state: #55655e;
+    --health: #7d5ba6;
+    --good: #176b45;
+    --bad: #9b3220;
+    --shadow: 0 1px 2px rgba(21, 30, 25, .05), 0 8px 24px -16px rgba(21, 30, 25, .22);
+
+    --display: Georgia, "Iowan Old Style", "Times New Roman", serif;
+    --ui: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --figure: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground: #0f1512;
+      --surface: #161d19;
+      --surface-2: #1d2621;
+      --ink: #e7ede9;
+      --ink-2: #c3cec7;
+      --muted: #8b9a92;
+      --line: #26302a;
+      --line-strong: #35423b;
+      --accent: #4fcfae;
+      --accent-soft: #17332c;
+      --saved: #7f9fd0;
+      --saved-2: #5c7cb0;
+      --tax-ord: #d99a52;
+      --tax-pref: #b8894f;
+      --tax-niit: #b07f96;
+      --tax-state: #7d8f86;
+      --health: #ab8ed0;
+      --good: #5bc98d;
+      --bad: #e08a72;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -16px rgba(0, 0, 0, .8);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #0f1512;
+    --surface: #161d19;
+    --surface-2: #1d2621;
+    --ink: #e7ede9;
+    --ink-2: #c3cec7;
+    --muted: #8b9a92;
+    --line: #26302a;
+    --line-strong: #35423b;
+    --accent: #4fcfae;
+    --accent-soft: #17332c;
+    --saved: #7f9fd0;
+    --saved-2: #5c7cb0;
+    --tax-ord: #d99a52;
+    --tax-pref: #b8894f;
+    --tax-niit: #b07f96;
+    --tax-state: #7d8f86;
+    --health: #ab8ed0;
+    --good: #5bc98d;
+    --bad: #e08a72;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -16px rgba(0, 0, 0, .8);
+  }
+
+  :root[data-theme="light"] {
+    --ground: #f6f8f5;
+    --surface: #ffffff;
+    --surface-2: #eef2ee;
+    --ink: #151e19;
+    --ink-2: #35443c;
+    --muted: #5c6b63;
+    --line: #dfe5df;
+    --line-strong: #c6d0c8;
+    --accent: #0f6b5c;
+    --accent-soft: #dcece7;
+    --saved: #4a6fa5;
+    --saved-2: #7a94c4;
+    --tax-ord: #a8641f;
+    --tax-pref: #c79a62;
+    --tax-niit: #7a4b63;
+    --tax-state: #55655e;
+    --health: #7d5ba6;
+    --good: #176b45;
+    --bad: #9b3220;
+    --shadow: 0 1px 2px rgba(21, 30, 25, .05), 0 8px 24px -16px rgba(21, 30, 25, .22);
+  }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--ui);
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 40px 24px 72px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  /* ---------- masthead ---------- */
+
+  .masthead {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-size: clamp(28px, 4.2vw, 40px);
+    line-height: 1.12;
+    font-weight: 400;
+    letter-spacing: -.015em;
+    text-wrap: balance;
+  }
+
+  .standfirst {
+    max-width: 62ch;
+    color: var(--ink-2);
+  }
+
+  /* ---------- tabs ---------- */
+
+  .tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  .tabs button {
+    appearance: none;
+    border: 1px solid transparent;
+    border-bottom: 0;
+    background: transparent;
+    color: var(--muted);
+    font-family: var(--ui);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: 4px 4px 0 0;
+    cursor: pointer;
+    margin-bottom: -1px;
+  }
+
+  .tabs button:hover { color: var(--ink-2); }
+
+  .tabs button[aria-selected="true"] {
+    background: var(--surface);
+    border-color: var(--line-strong);
+    color: var(--accent);
+  }
+
+  .tabs button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .tabs .tally {
+    font-family: var(--figure);
+    font-weight: 400;
+    font-size: 12.5px;
+    color: var(--muted);
+    margin-left: 8px;
+  }
+
+  [role="tabpanel"][hidden] { display: none; }
+
+  [role="tabpanel"] {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  /* ---------- layout ---------- */
+
+  .cols {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 400px);
+    gap: 32px;
+    align-items: start;
+  }
+
+  @media (max-width: 880px) {
+    .cols { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  .inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* ---------- input groups ---------- */
+
+  fieldset {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 18px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  legend {
+    font-family: var(--display);
+    font-size: 17px;
+    padding: 0 8px 0 0;
+    color: var(--ink);
+  }
+
+  legend span {
+    font-family: var(--ui);
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-right: 8px;
+  }
+
+  .field {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 148px;
+    align-items: center;
+    gap: 8px 16px;
+  }
+
+  .field > label {
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+
+  /* Full-width notes inside a field, below both columns. */
+  .field > .hint,
+  .field > .warn {
+    grid-column: 1 / -1;
+    margin-top: -4px;
+  }
+
+  .hint {
+    font-size: 12.5px;
+    color: var(--muted);
+    max-width: 58ch;
+  }
+
+  .hint b { color: var(--ink-2); }
+
+  .warn {
+    font-size: 12.5px;
+    color: var(--bad);
+    font-weight: 600;
+    max-width: 58ch;
+  }
+
+  /* The hidden attribute has to beat the flex display these carry. */
+  .warn[hidden], .hint[hidden], .check[hidden], .ghost[hidden] { display: none; }
+
+  .control {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--line-strong);
+    border-radius: 3px;
+    background: var(--ground);
+    padding: 0 9px;
+    height: 34px;
+  }
+
+  .control.locked {
+    background: var(--surface-2);
+    border-style: dashed;
+  }
+
+  .control.locked input { color: var(--muted); }
+
+  .control:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+
+  .control .sigil {
+    font-family: var(--figure);
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .control input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+    font-family: var(--figure);
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    padding: 0;
+  }
+
+  .control input:focus { outline: none; }
+
+  select {
+    height: 34px;
+    width: 100%;
+    border: 1px solid var(--line-strong);
+    border-radius: 3px;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--ui);
+    font-size: 14px;
+    padding: 0 8px;
+  }
+
+  select:focus-visible,
+  input[type="checkbox"]:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .check {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13.5px;
+    color: var(--ink-2);
+  }
+
+  .check input {
+    margin-top: 3px;
+    accent-color: var(--accent);
+    width: 15px;
+    height: 15px;
+    flex: none;
+  }
+
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 14px 16px;
+  }
+
+  @media (max-width: 560px) {
+    .field { grid-template-columns: minmax(0, 1fr); }
+    .split { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  .ghost {
+    appearance: none;
+    align-self: flex-start;
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    border-radius: 3px;
+    color: var(--ink-2);
+    font-family: var(--ui);
+    font-size: 12.5px;
+    padding: 5px 11px;
+    cursor: pointer;
+  }
+
+  .ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .ghost:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* ---------- results ---------- */
+
+  .results {
+    position: sticky;
+    top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  @media (max-width: 880px) {
+    .results { position: static; }
+  }
+
+  .headline {
+    padding: 22px 20px 20px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .headline .label {
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .bignum {
+    font-family: var(--figure);
+    font-size: clamp(34px, 6vw, 44px);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.03em;
+    line-height: 1.05;
+    color: var(--accent);
+  }
+
+  .subnum {
+    font-size: 13px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .verdict {
+    display: inline-flex;
+    align-self: flex-start;
+    align-items: baseline;
+    gap: 7px;
+    margin-top: 8px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 600;
+    border: 1px solid currentColor;
+  }
+
+  .verdict.surplus { color: var(--good); }
+  .verdict.shortfall { color: var(--bad); }
+  .verdict b { font-family: var(--figure); font-variant-numeric: tabular-nums; }
+
+  /* ---------- bands ---------- */
+
+  .band { padding: 20px; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 12px; }
+  .band:last-child { border-bottom: 0; }
+
+  .band-title {
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .band-note {
+    font-size: 12.5px;
+    color: var(--muted);
+    max-width: 68ch;
+  }
+
+  .bar {
+    display: flex;
+    height: 26px;
+    border-radius: 3px;
+    overflow: hidden;
+    background: var(--surface-2);
+  }
+
+  .bar > div {
+    transition: flex-grow .25s ease;
+    min-width: 0;
+  }
+
+  .seg-net { background: var(--accent); }
+  .seg-ord { background: var(--tax-ord); }
+  .seg-pref { background: var(--tax-pref); }
+  .seg-niit { background: var(--tax-niit); }
+  .seg-state { background: var(--tax-state); }
+  .seg-contrib { background: var(--saved); }
+  .seg-roth { background: var(--saved-2); }
+  .seg-health { background: var(--health); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bar > div { transition: none; }
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+
+  .ledger td, .ledger th {
+    padding: 6px 0;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-family: var(--figure);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .ledger th {
+    text-align: left;
+    font-family: var(--ui);
+    font-weight: 400;
+    color: var(--ink-2);
+  }
+
+  .ledger tr:last-child td, .ledger tr:last-child th {
+    border-bottom: 0;
+  }
+
+  .ledger tr.total th, .ledger tr.total td {
+    border-top: 2px solid var(--line-strong);
+    padding-top: 9px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .ledger tr.subtotal th, .ledger tr.subtotal td {
+    border-top: 1px solid var(--line-strong);
+    padding-top: 8px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .ledger tr.sub th {
+    padding-left: 17px;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+
+  .ledger tr.sub td { font-size: 12.5px; color: var(--muted); }
+
+  .swatch {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 2px;
+    margin-right: 8px;
+    vertical-align: 1px;
+  }
+
+  .scroller { overflow-x: auto; }
+
+  .grid-table { font-size: 13px; }
+
+  .grid-table th, .grid-table td {
+    padding: 7px 10px 7px 0;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-family: var(--figure);
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
+  }
+
+  .grid-table thead th {
+    font-family: var(--ui);
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  .grid-table tbody tr.here {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .grid-table tbody tr.here th:first-child::after {
+    content: " \2190";
+  }
+
+  .grid-table tbody tr.short td:last-child { color: var(--bad); font-weight: 700; }
+  .grid-table tbody tr.milestone th:first-child { color: var(--accent); }
+
+  .sens { min-width: 300px; }
+  .proj { min-width: 700px; }
+  .compare { min-width: 760px; }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .panel h2 {
+    font-family: var(--display);
+    font-size: 20px;
+    font-weight: 400;
+  }
+
+  .toggles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 22px;
+  }
+
+  /* ---------- cost tab ---------- */
+
+  .budget {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 148px 92px;
+    align-items: center;
+    gap: 10px 16px;
+  }
+
+  .budget > .row-label { font-size: 14px; color: var(--ink-2); }
+  .budget > .row-share {
+    font-family: var(--figure);
+    font-size: 12.5px;
+    color: var(--muted);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .budget > .full { grid-column: 1 / -1; }
+
+  .budget > .rule {
+    grid-column: 1 / -1;
+    height: 1px;
+    background: var(--line-strong);
+    margin: 2px 0;
+  }
+
+  /* A pinned figure survives a change of city, so it has to look different. */
+  .budget .control.pinned { border-color: var(--accent); }
+  .budget .control.pinned input { color: var(--accent); font-weight: 600; }
+
+  @media (max-width: 560px) {
+    .budget { grid-template-columns: minmax(0, 1fr) 92px; }
+    .budget > .row-label { grid-column: 1 / -1; }
+  }
+
+  .big-total {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 14px;
+  }
+
+  .big-total .n {
+    font-family: var(--figure);
+    font-size: clamp(28px, 5vw, 34px);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.03em;
+    color: var(--accent);
+  }
+
+  .stack { display: flex; flex-direction: column; gap: 12px; }
+
+  /* ---------- save and share ---------- */
+
+  .share { display: flex; flex-direction: column; gap: 8px; }
+
+  .share input {
+    width: 100%;
+    border: 1px solid var(--line-strong);
+    border-radius: 3px;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--figure);
+    font-size: 12.5px;
+    padding: 8px 10px;
+  }
+
+  .share input:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+
+  .share-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+
+  .share-msg { font-size: 12.5px; color: var(--accent); font-weight: 600; }
+
+  footer {
+    border-top: 1px solid var(--line-strong);
+    padding-top: 20px;
+    color: var(--muted);
+    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 72ch;
+  }
+
+  footer strong { color: var(--ink-2); }
+  footer a { color: var(--accent); }
+
+  .assumptions { padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Early retirement planner &middot; 2026 US federal rules</p>
+    <h1>What your portfolio pays you, and what your life costs</h1>
+    <p class="standfirst">Two halves of the same question. The first tab turns balances into after-tax spendable
+      income and projects it across your whole retirement, with inflation. The second builds the budget it has to
+      cover &mdash; including health care, which is the expense that actually decides whether retiring early
+      works. Tax-deferred accounts are left untouched until 59&frac12;.</p>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="Planner sections">
+    <button type="button" role="tab" id="tabIncome" aria-controls="panelIncome" aria-selected="true">
+      Income &amp; tax<span class="tally" id="tallyIncome">&mdash;</span>
+    </button>
+    <button type="button" role="tab" id="tabCost" aria-controls="panelCost" aria-selected="false" tabindex="-1">
+      Cost of living<span class="tally" id="tallyCost">&mdash;</span>
+    </button>
+  </div>
+
+  <form id="form" autocomplete="off">
+
+  <!-- ==================== TAB 1: INCOME ==================== -->
+  <div role="tabpanel" id="panelIncome" aria-labelledby="tabIncome">
+
+    <div class="cols">
+
+      <div class="inputs">
+
+        <fieldset>
+          <legend><span>You</span>Age and horizon</legend>
+
+          <div class="field">
+            <label for="age">Your age now</label>
+            <div class="control"><input id="age" type="number" min="18" max="100" step="1" value="55"></div>
+            <p class="hint">Drives three things: whether tax-deferred money is reachable (59&frac12;), when
+              Social Security starts, and whether health care comes from the ACA marketplace or Medicare (65).</p>
+          </div>
+
+          <div class="field">
+            <label for="horizon">Plan through age</label>
+            <div class="control"><input id="horizon" type="number" min="20" max="110" step="1" value="95"></div>
+            <p class="hint">That is <b id="horizonEcho">40</b> years to fund. Planning to a late age is the
+              cautious choice: outliving the money is the failure mode that has no remedy.</p>
+            <p class="warn" id="horizonWarn" hidden></p>
+          </div>
+
+          <div class="field">
+            <label for="inflation">General inflation</label>
+            <div class="control"><input id="inflation" type="number" min="0" max="15" step="0.1" value="2.5"><span class="sigil">%</span></div>
+            <p class="hint">Grows your spending and your Social Security COLA, and indexes the tax brackets and
+              standard deduction. Two things it deliberately does not index: the NIIT thresholds and the Social
+              Security taxation thresholds, because statute fixes those permanently.</p>
+          </div>
+
+          <div class="field">
+            <label for="medInflation">Health care inflation</label>
+            <div class="control"><input id="medInflation" type="number" min="0" max="20" step="0.1" value="5.5"><span class="sigil">%</span></div>
+            <p class="hint">Applied to premiums and medical spending only. Medical cost trend for 2026 alone is
+              running near 9%&ndash;10%; the default here is a gentler long-run figure, so treat it as optimistic.</p>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend><span>Portfolio</span>Balances by account type</legend>
+
+          <div class="field">
+            <label for="taxableBal">Taxable brokerage</label>
+            <div class="control"><span class="sigil">$</span><input id="taxableBal" type="number" min="0" step="1000" value="1800000"></div>
+          </div>
+
+          <div class="field">
+            <label for="deferredBal">Tax-deferred (401k, traditional IRA)</label>
+            <div class="control"><span class="sigil">$</span><input id="deferredBal" type="number" min="0" step="1000" value="175000"></div>
+            <p class="hint">Left alone entirely until 59&frac12;, then drawn only after the brokerage is
+              exhausted &mdash; so it compounds untouched in the meantime.</p>
+          </div>
+
+          <div class="field">
+            <label for="rothBal">Tax-free (Roth)</label>
+            <div class="control"><span class="sigil">$</span><input id="rothBal" type="number" min="0" step="1000" value="25000"></div>
+          </div>
+
+          <div class="field">
+            <label for="gainPct">Share of the brokerage balance that is unrealized gain</label>
+            <div class="control"><input id="gainPct" type="number" min="0" max="100" step="1" value="35"><span class="sigil">%</span></div>
+            <p class="hint">Sets your cost basis. When you sell to fund a withdrawal, only this fraction of the
+              sale is a taxable capital gain &mdash; returning your own basis is not income.</p>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend><span>Growth</span>Return and withdrawals</legend>
+
+          <div class="field">
+            <label for="returnRate">Expected total annual return</label>
+            <div class="control"><input id="returnRate" type="number" min="-20" max="30" step="0.1" value="6"><span class="sigil">%</span></div>
+            <p class="hint">Nominal, so a <b id="realReturnEcho">3.5%</b> real return after the inflation rate
+              above. Assumed identical every single year, which is the single most flattering assumption on this
+              page &mdash; see the note at the bottom.</p>
+          </div>
+
+          <div class="field">
+            <label for="volatility">Year-to-year volatility of that return</label>
+            <div class="control"><input id="volatility" type="number" min="0" max="60" step="1" value="15"><span class="sigil">%</span></div>
+            <p class="hint">Used only by the stress test at the bottom of this tab, never by the tables above.
+              About 15% is typical of a stock-heavy portfolio and 9% of a balanced one. Set it to zero and the
+              stress test collapses back to the steady assumption.</p>
+          </div>
+
+          <div class="field">
+            <label for="yieldRate">Of that, dividend and interest yield</label>
+            <div class="control"><input id="yieldRate" type="number" min="0" max="30" step="0.1" value="2.5"><span class="sigil">%</span></div>
+            <p class="hint">Only the yield is taxed every year. The remaining
+              <b id="apprEcho">3.5%</b> is price appreciation, untaxed until you sell it.</p>
+            <p class="warn" id="yieldWarn" hidden>Yield exceeds total return, so share prices are falling. Every
+              dollar of return is taxed as it arrives, and the balance holds up only because distributions are
+              reinvested.</p>
+          </div>
+
+          <div class="field">
+            <label for="ordShare">Share of that yield taxed as ordinary income</label>
+            <div class="control"><input id="ordShare" type="number" min="0" max="100" step="1" value="50"><span class="sigil">%</span></div>
+            <p class="hint">Bond interest, CDs, money market, and non-qualified dividends. The remaining
+              <b id="prefShareEcho">50%</b> is qualified dividends, taxed at 0/15/20%.</p>
+          </div>
+
+          <div class="field">
+            <label for="drawRate">Annual withdrawal rate</label>
+            <div class="control" id="drawControl"><input id="drawRate" type="number" min="0" max="30" step="0.1" value="4"><span class="sigil">%</span></div>
+            <p class="hint">A percentage of the whole portfolio, but sourced in order: brokerage first, then
+              tax-deferred once you reach 59&frac12;, then Roth last. Currently taking
+              <b id="drawSourceEcho">$0</b> from the brokerage.</p>
+            <p class="warn" id="drawWarn" hidden></p>
+          </div>
+
+          <label class="check">
+            <input id="drawEqualsReturn" type="checkbox">
+            <span>Draw only what the portfolio earns &mdash; set the withdrawal rate equal to the total return so
+              the balance holds steady in nominal terms.</span>
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend><span>Social Security</span>Claimed at the earliest age</legend>
+
+          <div class="field">
+            <label for="ssFra">Your benefit at full retirement age (67), per year</label>
+            <div class="control"><span class="sigil">$</span><input id="ssFra" type="number" min="0" step="500" value="30000"></div>
+            <p class="hint">In today's dollars, from your Social Security statement. The 2026 average at full
+              retirement age is about $23,700 a year; the maximum is about $50,500.</p>
+          </div>
+
+          <div class="field">
+            <label for="ssClaimAge">Claim at age</label>
+            <div class="control"><input id="ssClaimAge" type="number" min="62" max="70" step="1" value="62"></div>
+            <p class="hint">Claiming at 62 with a full retirement age of 67 is a permanent
+              <b id="ssCutEcho">30%</b> cut: <b id="ssBenefitEcho">$21,000</b> a year in today's dollars instead
+              of the figure above. It then rises with the COLA. Between zero and 85% of it becomes taxable
+              depending on your other income &mdash; currently <b id="ssTaxableEcho">$0</b>.</p>
+            <p class="hint" id="ssWaitEcho">Starts in <b>7</b> years, at age 62.</p>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend><span>Income</span>Cash arriving from elsewhere</legend>
+
+          <div class="field">
+            <label for="otherIncome">Pension or annuity, per year</label>
+            <div class="control"><span class="sigil">$</span><input id="otherIncome" type="number" min="0" step="1000" value="0"></div>
+            <p class="hint">Paid for life and grown with inflation. Taxed as ordinary income and counted as cash
+              you can spend. If yours has no cost-of-living adjustment, enter it and watch the real value fall in
+              the projection.</p>
+          </div>
+
+          <div class="field">
+            <label for="wageIncome">Wages from work, per year</label>
+            <div class="control"><span class="sigil">$</span><input id="wageIncome" type="number" min="0" step="1000" value="0"></div>
+            <p class="hint">Kept separate from a pension because wages stop. They are also the only income a
+              401(k) or IRA contribution can come out of.</p>
+          </div>
+
+          <div class="field">
+            <label for="wageYears">Years of work remaining</label>
+            <div class="control"><input id="wageYears" type="number" min="0" max="60" step="1" value="0"></div>
+            <p class="hint" id="wageYearsEcho">No more work years, so the wages above never arrive.</p>
+          </div>
+
+          <div class="field">
+            <label for="contribMonthly">401(k) contribution, per month</label>
+            <div class="control"><span class="sigil">$</span><input id="contribMonthly" type="number" min="0" step="100" value="0"></div>
+            <p class="hint">Pre-tax dollars out of your wages: it cuts this year's taxable income and grows the
+              tax-deferred balance, but it is not money you can spend. Your cap is
+              <b id="contribCapEcho">$2,042</b> a month, or <b id="contribCapYear">$24,500</b> for the year.
+              Contributing <b id="contribEcho">$0</b> a month.</p>
+            <p class="warn" id="contribWarn" hidden></p>
+          </div>
+
+          <div class="field">
+            <label for="rothMonthly">Roth IRA contribution, per month</label>
+            <div class="control"><span class="sigil">$</span><input id="rothMonthly" type="number" min="0" step="50" value="0"></div>
+            <p class="hint">After-tax dollars, so this one does not cut your tax bill &mdash; it buys income that
+              is never taxed again. Your cap is <b id="rothCapEcho">$625</b> a month, or
+              <b id="rothCapYear">$7,500</b> for the year. Contributing <b id="rothEcho">$0</b> a month.</p>
+            <p class="warn" id="rothWarn" hidden></p>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend><span>Tax</span>Filing and jurisdiction</legend>
+
+          <div class="split">
+            <div>
+              <label class="eyebrow" for="status">Filing status</label>
+              <select id="status">
+                <option value="single" selected>Single</option>
+                <option value="mfj">Married filing jointly</option>
+                <option value="hoh">Head of household</option>
+              </select>
+            </div>
+            <div>
+              <label class="eyebrow" for="stateRate">Local income tax</label>
+              <div class="control" id="stateControl" style="margin-top:2px"><input id="stateRate" type="number" min="0" max="60" step="0.1" value="3"><span class="sigil">%</span></div>
+            </div>
+          </div>
+
+          <p class="hint" id="localTaxEcho"></p>
+          <p class="hint" id="localTaxNote"></p>
+          <button type="button" class="ghost" id="resetStateRate" hidden>Go back to this location's rate</button>
+
+          <label class="check" id="treatyRow" hidden>
+            <input id="treatyOffset" type="checkbox" checked>
+            <span>Assume a tax treaty or the foreign tax credit stops the same income being taxed twice, so I pay
+              the higher of the US and local bills rather than the sum of both.</span>
+          </label>
+
+          <p class="hint">A joint return is treated as two people of the same age &mdash; that drives the senior
+            deduction, the health-care household size, and the cost-of-living budget.</p>
+
+          <label class="check">
+            <input id="niitOn" type="checkbox" checked>
+            <span>Apply the 3.8% net investment income tax above $200k (single, head of household) or $250k (joint).</span>
+          </label>
+        </fieldset>
+
+      </div>
+
+      <!-- ============ RESULTS ============ -->
+      <aside class="results">
+
+        <div class="headline">
+          <p class="label">Spendable, first year, per month</p>
+          <p class="bignum" id="monthlyNet" aria-live="polite">$0</p>
+          <p class="subnum"><span id="annualNet">$0</span> a year &middot; <span id="effRate">0%</span> effective tax rate</p>
+          <p class="verdict surplus" id="verdict" aria-live="polite"><span id="verdictWord">Surplus</span> <b id="verdictAmt">$0</b> / mo</p>
+          <p class="subnum" id="needEcho">Against $0 / mo of costs from the Cost of living tab.</p>
+        </div>
+
+        <div class="band">
+          <p class="band-title">Cash in, tax out</p>
+          <div class="bar" id="bar">
+            <div class="seg-net" id="segNet" style="flex-grow:1"></div>
+            <div class="seg-contrib" id="segContrib" style="flex-grow:0"></div>
+            <div class="seg-roth" id="segRoth" style="flex-grow:0"></div>
+            <div class="seg-ord" id="segOrd" style="flex-grow:0"></div>
+            <div class="seg-pref" id="segPref" style="flex-grow:0"></div>
+            <div class="seg-niit" id="segNiit" style="flex-grow:0"></div>
+            <div class="seg-state" id="segState" style="flex-grow:0"></div>
+          </div>
+
+          <table class="ledger">
+            <tbody>
+              <tr><th>Portfolio withdrawal</th><td id="rowGross">$0</td></tr>
+              <tr class="sub"><th>from the brokerage</th><td id="rowFromTaxable">$0</td></tr>
+              <tr class="sub"><th>from tax-deferred</th><td id="rowFromDeferred">$0</td></tr>
+              <tr class="sub" id="rowRmdLine" hidden><th>of that, forced out by the RMD</th><td id="rowRmd">$0</td></tr>
+              <tr class="sub"><th>from the Roth</th><td id="rowFromRoth">$0</td></tr>
+              <tr><th>Social Security</th><td id="rowSS">$0</td></tr>
+              <tr><th>Pension or annuity</th><td id="rowOther">$0</td></tr>
+              <tr><th>Wages from work</th><td id="rowWages">$0</td></tr>
+              <tr class="subtotal"><th>Total cash in</th><td id="rowCashIn">$0</td></tr>
+              <tr><th><span class="swatch seg-contrib"></span>Into the 401(k), not spendable</th><td id="rowContrib">$0</td></tr>
+              <tr><th><span class="swatch seg-roth"></span>Into the Roth IRA, not spendable</th><td id="rowRoth">$0</td></tr>
+              <tr><th><span class="swatch seg-ord"></span>Federal, ordinary rates</th><td id="rowOrd">$0</td></tr>
+              <tr><th><span class="swatch seg-pref"></span>Federal, qualified &amp; long-term</th><td id="rowPref">$0</td></tr>
+              <tr><th><span class="swatch seg-niit"></span>Net investment income tax</th><td id="rowNiit">$0</td></tr>
+              <tr><th><span class="swatch seg-state"></span><span id="rowStateLabel">State income tax</span></th><td id="rowState">$0</td></tr>
+              <tr class="total"><th><span class="swatch seg-net"></span>Net to you</th><td id="rowNet">$0</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="band">
+          <p class="band-title">What the tax is levied on</p>
+          <table class="ledger">
+            <tbody>
+              <tr><th>Dividends &amp; interest (taxed yearly)</th><td id="rowYield">$0</td></tr>
+              <tr><th>Capital gain realized by the sale</th><td id="rowRealized">$0</td></tr>
+              <tr><th>Tax-deferred withdrawal</th><td id="rowDeferred">$0</td></tr>
+              <tr><th>Taxable share of Social Security</th><td id="rowSSTaxable">$0</td></tr>
+              <tr><th>Never taxed: basis, Roth, untaxed benefit</th><td id="rowUntaxed">$0</td></tr>
+              <tr><th>Deductions applied</th><td id="rowStd">$0</td></tr>
+              <tr class="total"><th>Taxable income</th><td id="rowTaxable">$0</td></tr>
+              <tr><th>Top ordinary bracket reached</th><td id="rowBracket">&mdash;</td></tr>
+              <tr><th>Rate on qualified &amp; long-term gains</th><td id="rowLtcg">&mdash;</td></tr>
+            </tbody>
+          </table>
+          <p class="band-note" id="magiNote"></p>
+        </div>
+
+        <div class="band">
+          <p class="band-title">If you drew more, or less</p>
+          <div class="scroller">
+            <table class="grid-table sens" id="sens">
+              <thead>
+                <tr><th>Draw</th><th>Net / mo</th><th>Health / mo</th><th>Vs. need</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <p class="band-note" id="sensNote"></p>
+        </div>
+
+      </aside>
+    </div>
+
+    <!-- ============ PROJECTION ============ -->
+    <section class="panel">
+      <h2>The whole retirement, year by year</h2>
+      <p class="band-note">Every row is a full tax calculation on that year's balances, with brackets and
+        deductions indexed to inflation, costs grown at their own rates, and Social Security switching on when
+        you claim it. The column that matters is the last one.</p>
+
+      <div class="toggles">
+        <label class="check">
+          <input id="realDollars" type="checkbox" checked>
+          <span>Show today's dollars (deflate by inflation) rather than nominal amounts.</span>
+        </label>
+      </div>
+
+      <div class="scroller">
+        <table class="grid-table proj" id="proj">
+          <thead>
+            <tr>
+              <th>Age</th>
+              <th>Portfolio, start</th>
+              <th>Cash in</th>
+              <th>Total tax</th>
+              <th>Spendable / mo</th>
+              <th>Health / mo</th>
+              <th>Costs / mo</th>
+              <th>Vs. need</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="band-note" id="projSummary"></p>
+      <p class="warn" id="projWarn" hidden></p>
+    </section>
+
+    <!-- ============ SEQUENCE OF RETURNS ============ -->
+    <section class="panel">
+      <h2>What if the returns arrive in a bad order?</h2>
+      <p class="band-note">Everything above assumes the same return every single year, which is the most
+        flattering thing on this page. When you are withdrawing from a portfolio, the <em>order</em> of returns
+        matters as much as the average: a bad first decade takes money out at depressed prices and those shares
+        never come back. The scenarios below all keep your average return roughly intact and only change when the
+        bad years land.</p>
+
+      <div class="scroller">
+        <table class="grid-table proj" id="stress">
+          <thead>
+            <tr>
+              <th>Scenario</th>
+              <th>Portfolio after age <span id="stressEndAge">95</span></th>
+              <th>Lowest spendable / mo</th>
+              <th>First year short</th>
+              <th>Years short</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="band-note" id="stressNote"></p>
+
+      <p class="band-title" style="margin-top:6px">Random sequences</p>
+      <p class="band-note">One thousand runs, drawing each year's return at random around your average with the
+        volatility set on the left. Same inputs always give the same answer, so you can change one thing and see
+        what it did.</p>
+      <button type="button" class="ghost" id="runMc">Run 1,000 simulations</button>
+      <div id="mcOut" hidden>
+        <table class="ledger">
+          <tbody>
+            <tr><th>Runs that covered your costs every single year</th><td id="mcSuccess">&mdash;</td></tr>
+            <tr><th>Median years spent short, across all runs</th><td id="mcShort">&mdash;</td></tr>
+            <tr class="subtotal"><th>Ending portfolio, today's dollars &mdash; worst tenth</th><td id="mcP10">&mdash;</td></tr>
+            <tr><th>Median</th><td id="mcP50">&mdash;</td></tr>
+            <tr><th>Best tenth</th><td id="mcP90">&mdash;</td></tr>
+            <tr class="total"><th>Runs that ended with nothing left</th><td id="mcBroke">&mdash;</td></tr>
+          </tbody>
+        </table>
+        <p class="band-note" id="mcNote"></p>
+      </div>
+      <p class="warn" id="mcWarn" hidden></p>
+    </section>
+
+  </div>
+
+  <!-- ==================== TAB 2: COST ==================== -->
+  <div role="tabpanel" id="panelCost" aria-labelledby="tabCost" hidden>
+
+    <div class="cols">
+
+      <div class="inputs">
+
+        <fieldset>
+          <legend><span>Where</span>Location</legend>
+
+          <div>
+            <label class="eyebrow" for="location">City or region</label>
+            <select id="location"></select>
+          </div>
+
+          <p class="hint" id="locNote"></p>
+          <p class="warn" id="locFar" hidden></p>
+
+          <div class="field">
+            <label for="lifestyle">Lifestyle multiplier</label>
+            <div class="control"><input id="lifestyle" type="number" min="20" max="400" step="5" value="100"><span class="sigil">%</span></div>
+            <p class="hint">Scales every non-health category at once. 70% is frugal and local, 150% buys a larger
+              home, a car, and regular travel. Health care is deliberately excluded &mdash; it is not a
+              lifestyle choice.</p>
+          </div>
+
+          <button type="button" class="ghost" id="resetBudget">Reset all categories to this location's estimate</button>
+        </fieldset>
+
+        <fieldset>
+          <legend><span>Budget</span>Monthly cost tracking</legend>
+
+          <p class="hint">Each figure starts from the location estimate. Edit any of them and it stays put
+            &mdash; pinned values are shown in green and survive a change of city, so you can compare places
+            against your own numbers.</p>
+
+          <div class="budget">
+            <span class="row-label"><label for="costHousing">Housing: rent or mortgage, utilities, upkeep</label></span>
+            <span class="control"><span class="sigil">$</span><input id="costHousing" type="number" min="0" step="25" value="1600"></span>
+            <span class="row-share" id="shareHousing">0%</span>
+
+            <span class="row-label"><label for="costFood">Food: groceries and eating out</label></span>
+            <span class="control"><span class="sigil">$</span><input id="costFood" type="number" min="0" step="25" value="700"></span>
+            <span class="row-share" id="shareFood">0%</span>
+
+            <span class="row-label"><label for="costTransport">Transport: car, fuel, insurance, transit</label></span>
+            <span class="control"><span class="sigil">$</span><input id="costTransport" type="number" min="0" step="25" value="500"></span>
+            <span class="row-share" id="shareTransport">0%</span>
+
+            <span class="row-label"><label for="costInsurance">Other insurance, phone, internet, subscriptions</label></span>
+            <span class="control"><span class="sigil">$</span><input id="costInsurance" type="number" min="0" step="25" value="250"></span>
+            <span class="row-share" id="shareInsurance">0%</span>
+
+            <span class="row-label"><label for="costDiscretionary">Discretionary: travel, hobbies, gifts</label></span>
+            <span class="control"><span class="sigil">$</span><input id="costDiscretionary" type="number" min="0" step="25" value="550"></span>
+            <span class="row-share" id="shareDiscretionary">0%</span>
+
+            <span class="row-label"><label for="costOther">Everything else and a buffer for surprises</label></span>
+            <span class="control"><span class="sigil">$</span><input id="costOther" type="number" min="0" step="25" value="200"></span>
+            <span class="row-share" id="shareOther">0%</span>
+
+            <span class="rule"></span>
+
+            <span class="row-label"><b>Health care</b>, modelled below</span>
+            <span class="control locked"><span class="sigil">$</span><input id="costHealthEcho" type="number" value="0" disabled aria-label="Modelled monthly health care cost"></span>
+            <span class="row-share" id="shareHealth">0%</span>
+
+            <span class="row-label"><label for="costHealthExtra">Additional health spending: dental, vision, long-term care premiums</label></span>
+            <span class="control"><span class="sigil">$</span><input id="costHealthExtra" type="number" min="0" step="25" value="0"></span>
+            <span class="row-share" id="shareHealthExtra">0%</span>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend><span>Health</span>How the estimate is built</legend>
+          <p class="hint" id="healthMode"></p>
+          <table class="ledger" id="healthLedger"><tbody></tbody></table>
+          <p class="warn" id="healthWarn" hidden></p>
+        </fieldset>
+
+      </div>
+
+      <aside class="results">
+
+        <div class="headline">
+          <p class="label">Total monthly cost, first year</p>
+          <p class="bignum" id="costTotal">$0</p>
+          <p class="subnum"><span id="costAnnual">$0</span> a year &middot; health care is
+            <span id="costHealthShare">0%</span> of it</p>
+          <p class="verdict surplus" id="costVerdict"><span id="costVerdictWord">Covered</span> <b id="costVerdictAmt">$0</b> / mo</p>
+          <p class="subnum" id="costIncomeEcho">Against $0 / mo of spendable income.</p>
+        </div>
+
+        <div class="band">
+          <p class="band-title">Where the money goes</p>
+          <div class="bar">
+            <div class="seg-net" id="csegHousing" style="flex-grow:1"></div>
+            <div class="seg-ord" id="csegFood" style="flex-grow:0"></div>
+            <div class="seg-pref" id="csegTransport" style="flex-grow:0"></div>
+            <div class="seg-state" id="csegOtherFixed" style="flex-grow:0"></div>
+            <div class="seg-contrib" id="csegDiscretionary" style="flex-grow:0"></div>
+            <div class="seg-health" id="csegHealth" style="flex-grow:0"></div>
+          </div>
+          <table class="ledger">
+            <tbody>
+              <tr><th><span class="swatch seg-net"></span>Housing</th><td id="crowHousing">$0</td></tr>
+              <tr><th><span class="swatch seg-ord"></span>Food</th><td id="crowFood">$0</td></tr>
+              <tr><th><span class="swatch seg-pref"></span>Transport</th><td id="crowTransport">$0</td></tr>
+              <tr><th><span class="swatch seg-state"></span>Insurance, phone, other</th><td id="crowOtherFixed">$0</td></tr>
+              <tr><th><span class="swatch seg-contrib"></span>Discretionary</th><td id="crowDiscretionary">$0</td></tr>
+              <tr><th><span class="swatch seg-health"></span>Health care</th><td id="crowHealth">$0</td></tr>
+              <tr class="total"><th>Total</th><td id="crowTotal">$0</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="band">
+          <p class="band-title">What health care costs over time</p>
+          <div class="scroller">
+            <table class="grid-table sens" id="healthProj">
+              <thead><tr><th>Age</th><th>Health / mo</th><th>Costs / mo</th><th>Vs. income</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <p class="band-note">In today's dollars. The step at 65 is the move from an unsubsidised marketplace
+            premium to Medicare.</p>
+        </div>
+
+      </aside>
+    </div>
+
+    <section class="panel">
+      <h2>The same life, somewhere else</h2>
+      <p class="band-note">Your current budget re-priced in every location, keeping your lifestyle multiplier and
+        any figures you have pinned. Health care is recomputed for each place, which is where the largest
+        differences come from before 65.</p>
+      <div class="scroller">
+        <table class="grid-table compare" id="compare">
+          <thead>
+            <tr>
+              <th>Location</th>
+              <th>Housing</th>
+              <th>Other living</th>
+              <th>Health / mo</th>
+              <th>Total / mo</th>
+              <th>Income / mo</th>
+              <th>Left over</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="band-note">Ranked by what is left over, because both sides move: each row applies that place's
+        own local tax to your income as well as its own prices and health regime. If you have overridden the tax
+        rate by hand, that override applies only to the location you have selected &mdash; every other row uses
+        its own.</p>
+      <p class="band-note">Living abroad has requirements this table cannot show you: a visa or residence permit
+        with its own income test, tax treaties and possible double taxation, and the fact that Medicare does not
+        travel &mdash; abroad you pay for private cover out of pocket at every age, and premiums climb steeply
+        after 70 or become unavailable.</p>
+    </section>
+
+  </div>
+
+  </form>
+
+  <section class="panel">
+    <h2>Save or share this plan</h2>
+    <p class="band-note" id="saveState">Every figure you enter is saved in this browser automatically, so
+      closing the tab will not lose it.</p>
+    <div class="share">
+      <label class="eyebrow" for="planCode">Plan code &mdash; copy it out, or paste one in and press Load</label>
+      <input id="planCode" type="text" spellcheck="false" autocomplete="off">
+      <div class="share-row">
+        <button type="button" class="ghost" id="copyPlan">Copy</button>
+        <button type="button" class="ghost" id="loadPlan">Load</button>
+        <button type="button" class="ghost" id="resetPlan">Reset everything to defaults</button>
+        <span class="share-msg" id="shareMsg"></span>
+      </div>
+    </div>
+    <p class="band-note">The code carries every input on both tabs. When this page is open at its own address
+      the same state is written into the URL, so bookmarking or sending the link works too &mdash; but the code
+      is the reliable route, because a page displayed inside another one cannot always see its own address.</p>
+  </section>
+
+  <footer>
+    <p><strong>How the income side works.</strong> Spendable income is every dollar of cash you receive &mdash;
+      portfolio withdrawal, Social Security, pension &mdash; minus anything you contribute to a 401(k) or Roth
+      IRA and minus the year's total tax bill. Withdrawals are sourced in order: taxable brokerage first, then
+      tax-deferred once you are 59&frac12;, then Roth. Dividends and interest are taxed as they arrive. Price
+      appreciation is not taxed until you sell, and when you do, only the gain portion of the sale is taxable.
+      Tax-deferred withdrawals are ordinary income, Roth withdrawals are untaxed, and Social Security is taxed on
+      the provisional-income test, which makes between 0% and 85% of the benefit taxable. The standard deduction
+      is applied to ordinary income first, then qualified dividends and long-term gains stack on top to find
+      their 0/15/20% rate.</p>
+    <ul class="assumptions">
+      <li><strong>No early withdrawals, but forced ones later.</strong> Tax-deferred balances are untouched
+        before 59&frac12;, so no 10% penalty ever applies and nothing is modelled for 72(t) schedules, the rule
+        of 55, or Roth conversion ladders. Before 59&frac12; the Roth is the fallback if the brokerage runs dry,
+        which assumes what comes out is contribution basis rather than earnings; earnings withdrawn early would
+        be taxed and penalised. From the required-distribution age &mdash; 73, or 75 if you were born in 1960 or
+        later &mdash; the IRS Uniform Lifetime Table overrides the withdrawal order and forces money out as
+        ordinary income whether you want it or not. Leaving a 401(k) alone for decades makes that forced
+        distribution large, and this is where a long plan's tax bill actually lands. Cash you receive but do not
+        spend &mdash; whether from a forced distribution or simply from drawing more than your budget needs
+        &mdash; is reinvested in the taxable brokerage at full cost basis, so a required distribution is a
+        taxable transfer between accounts rather than money lost.</li>
+      <li><strong>Social Security.</strong> Reduced by 5/9 of 1% for each of the first 36 months claimed before a
+        full retirement age of 67, and 5/12 of 1% for each month beyond that &mdash; a 30% cut at 62 &mdash; or
+        increased by 8% a year for delay past 67. The benefit is stated in today's dollars and grown by the COLA.
+        The provisional-income thresholds that decide how much of it is taxable ($25,000/$34,000 single,
+        $32,000/$44,000 joint) are fixed in statute and never indexed, so a rising share of the benefit becomes
+        taxable over a long retirement. Spousal and survivor benefits and the earnings test are not modelled.</li>
+      <li><strong>Health care before 65</strong> is priced off the 2026 ACA benchmark silver plan, about $1,060 a
+        month at age 60 unsubsidised, scaled by the federal default age curve. The premium tax credit uses the
+        2026 rules with the enhanced subsidies expired, so the 400%-of-poverty subsidy cliff is back: at
+        $62,000 of income a 60-year-old pays about $515 a month, and $2,000 more income costs the entire credit.
+        The credit has a floor as well as a ceiling: below 100% of the poverty line there is none either, because
+        coverage is meant to come from Medicaid &mdash; or from nothing at all in the ten states that did not
+        expand it. So the credit exists only inside a corridor, and both walls are modelled. Because your AGI
+        drives this, realising capital gains raises your premium as well as your tax, and the withdrawal table
+        prices each draw rate's health care separately for exactly that reason. Marketplace premiums vary widely
+        by county and plan; one national benchmark is used here.</li>
+      <li><strong>Health care from 65</strong> is Medicare: the 2026 Part B premium of $202.90, a typical Part D
+        premium, a Medigap plan, and out-of-pocket spending. IRMAA surcharges are applied from the 2026 brackets,
+        which begin at $109,000 single and $218,000 joint. In reality IRMAA looks at your income from two years
+        earlier; it is applied to the current year here, so a one-off spike shows up a year or two early.
+        Long-term care, which Medicare largely does not cover, is not included &mdash; add it in the additional
+        health spending field.</li>
+      <li><strong>Cost of living</strong> figures are broad-brush indices for a single adult, scaled by 1.15 on
+        housing and 1.6 on everything else for a two-person household, then by your lifestyle multiplier. They
+        are order-of-magnitude guidance for comparing places, not quotes: rents inside one city vary more than
+        the gap between many of these cities. Health costs abroad are typical private international or local
+        cover for someone in their late fifties and rise sharply with age. Small beach and surf towns behave
+        differently from their country's average &mdash; housing carries a foreigner and ocean-view premium while
+        local food and labour stay cheap, so the housing and non-housing indices diverge much more than they do
+        in a capital city. Places flagged as having no nearby hospital are flagged for a reason: air ambulance
+        cover is a separate purchase, and residency in most of these countries requires a visa with its own
+        income test.</li>
+      <li>2026 federal brackets, standard deductions, and long-term gain thresholds, including the additional
+        deduction at 65 and the $6,000 senior deduction with its 6% phaseout. That senior deduction is scheduled
+        to expire after 2028, which this does not model. Contribution limits are the 2026 $24,500 elective
+        deferral and $7,500 IRA limits plus catch-ups from 50, with the Roth phaseout applied as a straight line
+        rather than the IRS rounding rules. Brackets, deductions, limits and poverty guidelines are indexed to
+        your general inflation rate; NIIT and Social Security thresholds are not, because statute fixes them.</li>
+      <li><strong>Local tax follows the location you pick.</strong> Each place carries one effective rate as a
+        stand-in for real brackets, exemptions and retirement-income exclusions, plus whether it taxes Social
+        Security and whether it exempts tax-deferred withdrawals &mdash; Pennsylvania, Illinois and Mississippi
+        do, almost nowhere else. Override the rate and it stops following the location. Abroad, the rate is what
+        a resident US retiree would face locally, and the territorial countries are set to zero because they do
+        not tax foreign-source income at all, which is what a US portfolio is to them. A US citizen owes US
+        federal tax everywhere on earth, so the treaty setting decides whether the local bill lands on top of the
+        federal one or credits against it; reality usually sits between those two, and because much US-source
+        investment income cannot be resourced under a treaty, double taxation is a real risk. Wealth taxes are
+        not modelled as such &mdash; the Netherlands taxes a deemed return on assets rather than income, which on
+        a large portfolio behaves nothing like the rate shown. Treat all of it as a prompt to get local advice,
+        not as an answer.</li>
+      <li><strong>Sequence-of-returns risk is modelled, but only as a model.</strong> Every table except the
+        stress test assumes the same return every year, which is the most flattering assumption on this page. The
+        stress panel keeps your average return and moves only when the bad years land; the paired scenarios are
+        the point, because an identical decade early and late produce very different endings. The thousand random
+        runs draw each year independently from a normal distribution, which is kinder than reality &mdash; real
+        markets have fatter tails and crashes cluster &mdash; so read that success rate as an optimistic bound
+        rather than a probability. It is not historical data and makes no claim to be.</li>
+      <li>Still absent: itemized deductions, credits, QBI, AMT, tax-loss harvesting (which matters more than it
+        sounds &mdash; a long downturn can leave a large unrealised loss earning nothing here), employer
+        matching, backdoor Roth conversions, and Roth conversion ladders. Cash you fall short by is simply
+        reported as a shortfall rather than funded by selling more, so a plan that runs short keeps its portfolio
+        intact on paper when in reality you would be spending it down faster.</li>
+    </ul>
+    <p>This is an estimating tool, not tax or investment advice. Run real numbers with a CPA or a licensed
+      advisor before making decisions that depend on them.</p>
+  </footer>
+</div>
+
+<script>
+  "use strict";
+
+  /* ---------------------------------------------------------------- tax data */
+
+  /* 2026 figures. NIIT thresholds and the Social Security provisional-income
+     bases are fixed in statute and never indexed -- everything else here is. */
+  var TAX = {
+    single: {
+      std: 16100, add65: 2050, people: 1, niit: 200000,
+      ordinary: [[12400, .10], [50400, .12], [105700, .22], [201775, .24], [256225, .32], [640600, .35], [Infinity, .37]],
+      ltcg: [[49450, 0], [545500, .15], [Infinity, .20]],
+      ssBase: [25000, 34000],
+      seniorPhase: 75000,
+      rothPhase: [153000, 168000],
+      irmaa: 109000
+    },
+    mfj: {
+      std: 32200, add65: 1650, people: 2, niit: 250000,
+      ordinary: [[24800, .10], [100800, .12], [211400, .22], [403550, .24], [512450, .32], [768700, .35], [Infinity, .37]],
+      ltcg: [[98900, 0], [613700, .15], [Infinity, .20]],
+      ssBase: [32000, 44000],
+      seniorPhase: 150000,
+      rothPhase: [242000, 252000],
+      irmaa: 218000
+    },
+    hoh: {
+      std: 24150, add65: 2050, people: 1, niit: 200000,
+      ordinary: [[17700, .10], [67450, .12], [105700, .22], [201775, .24], [256200, .32], [640600, .35], [Infinity, .37]],
+      ltcg: [[66200, 0], [579600, .15], [Infinity, .20]],
+      ssBase: [25000, 34000],
+      seniorPhase: 75000,
+      rothPhase: [153000, 168000],
+      irmaa: 109000
+    }
+  };
+
+  var SENIOR_DEDUCTION = 6000;
+  var SENIOR_PHASEOUT_RATE = .06;
+
+  var DEFERRAL_LIMIT = 24500;
+  var DEFERRAL_CATCHUP = 8000;
+  var IRA_LIMIT = 7500;
+  var IRA_CATCHUP = 1100;
+
+  var DEFERRED_AGE = 59.5;
+  var MEDICARE_AGE = 65;
+  var FRA = 67;
+
+  /*
+   * SECURE 2.0 pushed required minimum distributions to 73, and to 75 for
+   * anyone born in 1960 or later.
+   */
+  var RMD_AGE_EARLY = 73;
+  var RMD_AGE_LATE = 75;
+  var RMD_LATE_BIRTH_YEAR = 1960;
+  var THIS_YEAR = 2026;
+
+  /* IRS Uniform Lifetime Table, in force from 2022. */
+  var ULT = {
+    73: 26.5, 74: 25.5, 75: 24.6, 76: 23.7, 77: 22.9, 78: 22.0, 79: 21.1,
+    80: 20.2, 81: 19.4, 82: 18.5, 83: 17.7, 84: 16.8, 85: 16.0, 86: 15.2,
+    87: 14.4, 88: 13.7, 89: 12.9, 90: 12.2, 91: 11.5, 92: 10.8, 93: 10.1,
+    94: 9.5, 95: 8.9, 96: 8.4, 97: 7.8, 98: 7.3, 99: 6.8, 100: 6.4,
+    101: 6.0, 102: 5.6, 103: 5.2, 104: 4.9, 105: 4.6, 106: 4.3, 107: 4.1,
+    108: 3.9, 109: 3.7, 110: 3.5
+  };
+
+  /* Beyond the published table the divisor is held at its floor. */
+  function ultDivisor(age) {
+    if (age < RMD_AGE_EARLY) return 0;
+    return ULT[Math.min(Math.round(age), 110)] || 3.5;
+  }
+
+  /* ------------------------------------------------------- health care data */
+
+  /* 2026 poverty guidelines, the basis for the premium tax credit. */
+  var FPL_FIRST = 15650;
+  var FPL_EACH = 5500;
+
+  /*
+   * The 2026 benchmark silver premium is about $1,060 a month at age 60. The
+   * federal default age curve puts age 60 at 2.714x the age-21 rate, which
+   * back-solves to the base below.
+   */
+  var ACA_BASE_MONTHLY = 1060 / 2.714;
+
+  /* Federal default age-rating curve, 3:1 capped from 64. */
+  var ACA_AGE_CURVE = [
+    [21, 1.000], [25, 1.004], [30, 1.135], [35, 1.222], [40, 1.278],
+    [45, 1.444], [50, 1.786], [55, 2.230], [60, 2.714], [64, 3.000]
+  ];
+
+  /*
+   * The premium tax credit is bounded at both ends. Below 100% of the poverty
+   * line there is no credit at all -- you belong to Medicaid in an expansion
+   * state, or to the coverage gap in the ten that did not expand. Above 400%
+   * it vanishes again, the cliff. In between, this is the required share of
+   * income on the 2026 schedule with the enhanced subsidies expired.
+   */
+  var ACA_FLOOR = 1.00;
+  var ACA_CEILING = 4.00;
+
+  var ACA_BANDS = [
+    [1.00, .0210, 1.33, .0210],
+    [1.33, .0314, 1.50, .0419],
+    [1.50, .0419, 2.00, .0660],
+    [2.00, .0660, 2.50, .0844],
+    [2.50, .0844, 3.00, .0996],
+    [3.00, .0996, 4.00, .0996]
+  ];
+
+  /* Out-of-pocket medical spending on top of the premium, per person, monthly. */
+  var ACA_OOP_MONTHLY = 210;
+
+  /* 2026 Medicare, per person, monthly. */
+  var PART_B = 202.90;
+  var PART_D = 40;
+  var MEDIGAP = 170;
+  var MEDICARE_OOP = 120;
+
+  /* 2026 IRMAA: [threshold multiple above the base, Part B add, Part D add]. */
+  var IRMAA_TIERS = [
+    [1.000, 81.20, 14.50],
+    [1.256, 203.00, 37.50],
+    [1.569, 324.90, 60.40],
+    [1.881, 446.70, 83.30],
+    [4.587, 487.00, 91.00]
+  ];
+
+  /* ------------------------------------------------------------- locations */
+
+  /*
+   * h = housing index, x = every other living cost, both against the US
+   * national average for one adult. m = annual private health cover per person
+   * where Medicare does not reach. far = no full-service hospital within about
+   * an hour, which is a real planning constraint rather than a price.
+   */
+  var LOCATIONS = [
+    { id: "us", label: "United States, national average", h: 1.00, x: 1.00 },
+    { id: "tulsa", label: "Tulsa, Oklahoma", h: .65, x: .92 },
+    { id: "cleveland", label: "Cleveland, Ohio", h: .66, x: .92 },
+    { id: "pittsburgh", label: "Pittsburgh, Pennsylvania", h: .75, x: .94 },
+    { id: "sanantonio", label: "San Antonio, Texas", h: .82, x: .95 },
+    { id: "asheville", label: "Asheville, North Carolina", h: 1.00, x: .97 },
+    { id: "boise", label: "Boise, Idaho", h: 1.05, x: .98 },
+    { id: "phoenix", label: "Phoenix, Arizona", h: 1.06, x: .99 },
+    { id: "tampa", label: "Tampa, Florida", h: 1.16, x: 1.01 },
+    { id: "austin", label: "Austin, Texas", h: 1.18, x: 1.02 },
+    { id: "denver", label: "Denver, Colorado", h: 1.28, x: 1.05 },
+    { id: "sandiego", label: "San Diego, California", h: 1.80, x: 1.18 },
+    { id: "seattle", label: "Seattle, Washington", h: 1.75, x: 1.16 },
+    { id: "boston", label: "Boston, Massachusetts", h: 2.05, x: 1.20 },
+    { id: "nyc", label: "New York, New York", h: 2.60, x: 1.26 },
+    { id: "sf", label: "San Francisco, California", h: 2.70, x: 1.30 },
+    { id: "honolulu", label: "Honolulu, Hawaii", h: 1.90, x: 1.45 },
+
+    { id: "toronto", label: "Toronto, Canada", h: 1.25, x: 1.00, m: 3000 },
+    { id: "mexicocity", label: "Mexico City, Mexico", h: .48, x: .55, m: 2600 },
+    { id: "merida", label: "Merida, Mexico", h: .38, x: .50, m: 2600 },
+    { id: "puertoescondido", label: "Puerto Escondido, Mexico", h: .53, x: .34, m: 2800, far: 1 },
+    { id: "panama", label: "Panama City, Panama", h: .60, x: .70, m: 3200 },
+    { id: "sanjose", label: "San Jose, Costa Rica", h: .50, x: .72, m: 3000 },
+    { id: "nosara", label: "Nosara, Costa Rica", h: .94, x: .59, m: 3000, far: 1 },
+    { id: "playahermosacr", label: "Playa Hermosa, Costa Rica", h: .63, x: .52, m: 3000, far: 1 },
+    { id: "uvita", label: "Uvita, Costa Rica", h: .68, x: .53, m: 3000, far: 1 },
+    { id: "dominical", label: "Dominical, Costa Rica", h: .66, x: .52, m: 3000, far: 1 },
+    { id: "ojochal", label: "Ojochal, Costa Rica", h: .56, x: .52, m: 3000, far: 1 },
+    { id: "sanjuandelsur", label: "San Juan del Sur, Nicaragua", h: .56, x: .36, m: 2800, far: 1 },
+    { id: "tola", label: "Tola, Nicaragua", h: .50, x: .34, m: 2800, far: 1 },
+    { id: "popoyo", label: "Popoyo, Nicaragua", h: .53, x: .35, m: 2800, far: 1 },
+    { id: "elzonte", label: "El Zonte, El Salvador", h: .44, x: .30, m: 2600, far: 1 },
+    { id: "eltunco", label: "El Tunco, El Salvador", h: .38, x: .28, m: 2600, far: 1 },
+    { id: "atitlan", label: "Lake Atitlan, Guatemala", h: .31, x: .25, m: 2400, far: 1 },
+    { id: "medellin", label: "Medellin, Colombia", h: .38, x: .48, m: 1900 },
+    { id: "mancora", label: "Mancora, Peru", h: .26, x: .20, m: 2600, far: 1 },
+    { id: "montevideo", label: "Montevideo, Uruguay", h: .48, x: .68, m: 3000 },
+    { id: "buenosaires", label: "Buenos Aires, Argentina", h: .35, x: .45, m: 2000 },
+
+    { id: "porto", label: "Porto, Portugal", h: .48, x: .62, m: 2000 },
+    { id: "ericeira", label: "Ericeira, Portugal", h: .58, x: .68, m: 2000 },
+    { id: "lisbon", label: "Lisbon, Portugal", h: .62, x: .70, m: 2000 },
+    { id: "valencia", label: "Valencia, Spain", h: .52, x: .65, m: 2200 },
+    { id: "corralejo", label: "Corralejo, Fuerteventura, Spain", h: .69, x: .68, m: 2200 },
+    { id: "madrid", label: "Madrid, Spain", h: .72, x: .78, m: 2200 },
+    { id: "athens", label: "Athens, Greece", h: .48, x: .65, m: 2400 },
+    { id: "kotor", label: "Kotor, Montenegro", h: .44, x: .45, m: 2200, far: 1 },
+    { id: "split", label: "Split, Croatia", h: .50, x: .68, m: 2400 },
+    { id: "budapest", label: "Budapest, Hungary", h: .45, x: .60, m: 2200 },
+    { id: "warsaw", label: "Warsaw, Poland", h: .50, x: .62, m: 2200 },
+    { id: "prague", label: "Prague, Czechia", h: .58, x: .68, m: 2600 },
+    { id: "berlin", label: "Berlin, Germany", h: .80, x: .82, m: 4800 },
+    { id: "vienna", label: "Vienna, Austria", h: .78, x: .85, m: 4200 },
+    { id: "paris", label: "Paris, France", h: 1.15, x: .95, m: 3200 },
+    { id: "amsterdam", label: "Amsterdam, Netherlands", h: 1.35, x: 1.00, m: 4200 },
+    { id: "dublin", label: "Dublin, Ireland", h: 1.35, x: 1.05, m: 3600 },
+    { id: "edinburgh", label: "Edinburgh, United Kingdom", h: 1.00, x: .95, m: 3600 },
+    { id: "london", label: "London, United Kingdom", h: 1.55, x: 1.05, m: 3600 },
+    { id: "tbilisi", label: "Tbilisi, Georgia", h: .30, x: .40, m: 1800 },
+    { id: "istanbul", label: "Istanbul, Turkey", h: .30, x: .38, m: 1900 },
+    { id: "dubai", label: "Dubai, United Arab Emirates", h: 1.15, x: .95, m: 4800 },
+    { id: "capetown", label: "Cape Town, South Africa", h: .38, x: .48, m: 2800 },
+
+    { id: "chiangmai", label: "Chiang Mai, Thailand", h: .28, x: .38, m: 2800 },
+    { id: "bangkok", label: "Bangkok, Thailand", h: .45, x: .50, m: 2800 },
+    { id: "hochiminh", label: "Ho Chi Minh City, Vietnam", h: .32, x: .38, m: 2400 },
+    { id: "kualalumpur", label: "Kuala Lumpur, Malaysia", h: .35, x: .42, m: 2600 },
+    { id: "kutalombok", label: "Kuta Lombok, Indonesia", h: .34, x: .23, m: 3000, far: 1 },
+    { id: "siargao", label: "Siargao, Philippines", h: .42, x: .28, m: 3000, far: 1 },
+    { id: "taipei", label: "Taipei, Taiwan", h: .55, x: .62, m: 2400 },
+    { id: "seoul", label: "Seoul, South Korea", h: .75, x: .85, m: 3000 },
+    { id: "osaka", label: "Osaka, Japan", h: .55, x: .80, m: 3400 },
+    { id: "tokyo", label: "Tokyo, Japan", h: .78, x: .88, m: 3400 },
+    { id: "singapore", label: "Singapore", h: 1.60, x: 1.15, m: 6000 },
+    { id: "auckland", label: "Auckland, New Zealand", h: 1.00, x: 1.05, m: 3400 },
+    { id: "melbourne", label: "Melbourne, Australia", h: 1.15, x: 1.05, m: 3600 }
+  ];
+
+  /*
+   * Local income tax by location, keyed to the list above.
+   *
+   *   sr  effective local rate, percent, on a retiree's investment and pension
+   *       income -- a single flat stand-in for real brackets and exemptions
+   *   ss  1 if the jurisdiction taxes Social Security (most do not)
+   *   xd  1 if it exempts tax-deferred withdrawals (Pennsylvania, Illinois,
+   *       Mississippi do; almost nowhere else)
+   *   tn  what a reader most needs to know that a single rate cannot say
+   *
+   * Abroad these are the local rate a resident US retiree would face. A US
+   * citizen still owes US federal tax everywhere on earth; the treaty setting
+   * decides whether the local bill lands on top of that or credits against it.
+   * Rates for territorial countries are zero because they do not tax
+   * foreign-source income at all, which is what a US portfolio is to them.
+   */
+  var LOCAL_TAX = {
+    us: { sr: 3.0, tn: "A placeholder national average. Pick your actual city." },
+    tulsa: { sr: 4.0 },
+    cleveland: { sr: 2.75, tn: "Ohio moved to a 2.75% flat rate for 2026. City income tax applies to earned income, not to investment income or pensions." },
+    pittsburgh: { sr: 3.07, xd: 1, tn: "Pennsylvania's 3.07% never touches retirement income: 401(k), IRA and pension withdrawals after 59.5 are exempt, and so is Social Security. Only dividends, interest and capital gains are taxed." },
+    sanantonio: { sr: 0 },
+    asheville: { sr: 4.25 },
+    boise: { sr: 5.3 },
+    phoenix: { sr: 2.5 },
+    tampa: { sr: 0 },
+    austin: { sr: 0 },
+    denver: { sr: 4.4, tn: "Colorado taxes Social Security but lets you subtract it in full from 65, which is how it is treated here." },
+    seattle: { sr: 0, tn: "No income tax, but Washington levies 7% on capital gains above about $278,000 in a year and 9.9% above $1m. Not modelled -- if you plan a large single realisation, it applies." },
+    boston: { sr: 5.0, tn: "5% flat, plus a 4% surtax on income above roughly $1m that is not modelled." },
+    nyc: { sr: 9.0, tn: "State plus city. New York exempts Social Security and the first $20,000 of pension income from 59.5." },
+    sf: { sr: 6.5, tn: "California is progressive to 13.3% and taxes capital gains as ordinary income. The rate here is an effective estimate at a moderate income, not the top rate." },
+    sandiego: { sr: 6.5, tn: "California is progressive to 13.3% and taxes capital gains as ordinary income. The rate here is an effective estimate at a moderate income, not the top rate." },
+    honolulu: { sr: 7.5 },
+
+    toronto: { sr: 30, tn: "Canada taxes residents on worldwide income and the combined federal-provincial rate is high. The US-Canada treaty and the foreign tax credit are what stop this being paid twice." },
+    mexicocity: { sr: 18 },
+    merida: { sr: 18 },
+    puertoescondido: { sr: 18, tn: "Mexico taxes residents on worldwide income, progressive to 35%. Becoming a tax resident is what triggers it; a temporary resident visa alone may not." },
+    panama: { sr: 0, tn: "Territorial: Panama does not tax foreign-source income at all, with no remittance condition. The Pensionado visa is the usual route." },
+    sanjose: { sr: 0, tn: "Territorial: Costa Rica does not tax foreign-source income." },
+    nosara: { sr: 0, tn: "Territorial: Costa Rica does not tax foreign-source income." },
+    playahermosacr: { sr: 0, tn: "Territorial: Costa Rica does not tax foreign-source income." },
+    uvita: { sr: 0, tn: "Territorial: Costa Rica does not tax foreign-source income." },
+    dominical: { sr: 0, tn: "Territorial: Costa Rica does not tax foreign-source income." },
+    ojochal: { sr: 0, tn: "Territorial: Costa Rica does not tax foreign-source income." },
+    sanjuandelsur: { sr: 0, tn: "Territorial: Nicaragua does not tax foreign-source income." },
+    tola: { sr: 0, tn: "Territorial: Nicaragua does not tax foreign-source income." },
+    popoyo: { sr: 0, tn: "Territorial: Nicaragua does not tax foreign-source income." },
+    elzonte: { sr: 10, tn: "El Salvador taxes residents on worldwide income, with a lower rate on foreign investment income." },
+    eltunco: { sr: 10, tn: "El Salvador taxes residents on worldwide income, with a lower rate on foreign investment income." },
+    atitlan: { sr: 0, tn: "Territorial: Guatemala does not tax foreign-source income." },
+    medellin: { sr: 20, tn: "Colombia taxes residents on worldwide income, progressive to 39%, and residency arrives after 183 days." },
+    mancora: { sr: 15, tn: "Peru taxes residents on worldwide income." },
+    montevideo: { sr: 0, tn: "New residents get a holiday on foreign income for up to eleven years, or a 7% flat rate instead. Zero here assumes the holiday." },
+    buenosaires: { sr: 20, tn: "Argentina taxes residents on worldwide income and the wider tax picture is volatile." },
+
+    porto: { sr: 25, tn: "The old non-habitual resident regime closed to new pensioners; its replacement mostly does not cover retirees. Foreign pensions are taxed at progressive rates to 48%, capital gains at 28%." },
+    ericeira: { sr: 25, tn: "The old non-habitual resident regime closed to new pensioners; its replacement mostly does not cover retirees. Foreign pensions are taxed at progressive rates to 48%, capital gains at 28%." },
+    lisbon: { sr: 25, tn: "The old non-habitual resident regime closed to new pensioners; its replacement mostly does not cover retirees. Foreign pensions are taxed at progressive rates to 48%, capital gains at 28%." },
+    valencia: { sr: 22, tn: "Spain taxes residents on worldwide income, savings income at 19-30%, and also levies wealth tax in some regions." },
+    corralejo: { sr: 22, tn: "Canary Islands income tax is the Spanish one; only the sales tax differs. Spain taxes worldwide income and some regions levy wealth tax." },
+    madrid: { sr: 22, tn: "Spain taxes residents on worldwide income, savings income at 19-30%, and also levies wealth tax in some regions." },
+    athens: { sr: 7, tn: "Greece offers foreign pensioners a 7% flat rate on all foreign income for fifteen years, which is what this uses." },
+    kotor: { sr: 10, tn: "Montenegro's rates are low and flat-ish." },
+    split: { sr: 15 },
+    budapest: { sr: 15, tn: "Hungary is a 15% flat rate." },
+    warsaw: { sr: 17 },
+    prague: { sr: 15 },
+    berlin: { sr: 26, tn: "Germany taxes worldwide income, investment income at about 26% including the solidarity surcharge, other income progressive to 45%." },
+    vienna: { sr: 27, tn: "Austria taxes capital income at 27.5% and other income progressively to 55%." },
+    paris: { sr: 15, tn: "France applies a 30% flat rate to investment income, but the US-France treaty is unusually favourable to Americans: US-source pensions and Social Security are generally taxable only by the US. The lower rate here reflects that." },
+    amsterdam: { sr: 50, tn: "The Netherlands taxes a deemed return on your assets rather than your actual income, roughly 2% of the portfolio a year. On a large portfolio that is punitive and behaves nothing like an income tax -- the high rate here is a crude stand-in. Model this one properly before moving." },
+    dublin: { sr: 25, tn: "Ireland taxes worldwide income at 20/40% with capital gains at 33%." },
+    edinburgh: { sr: 20, tn: "The UK taxes residents on worldwide income. The US-UK treaty handles pensions and Social Security well; capital gains and dividends are where the bill lands." },
+    london: { sr: 20, tn: "The UK taxes residents on worldwide income. The US-UK treaty handles pensions and Social Security well; capital gains and dividends are where the bill lands." },
+    tbilisi: { sr: 0, tn: "Territorial: Georgia does not tax foreign-source income." },
+    istanbul: { sr: 20, tn: "Turkey taxes residents on worldwide income, progressive to 40%." },
+    dubai: { sr: 0, tn: "No personal income tax at all. A US citizen still owes US federal tax." },
+    capetown: { sr: 22, tn: "South Africa taxes residents on worldwide income, progressive to 45%, with capital gains at an effective 18%." },
+
+    chiangmai: { sr: 20, tn: "Thailand began taxing remitted foreign income in 2024, progressive to 35%. A retiree living there has to remit money to live on, so in practice it is taxable -- this is a real change from the old rules." },
+    bangkok: { sr: 20, tn: "Thailand began taxing remitted foreign income in 2024, progressive to 35%. A retiree living there has to remit money to live on, so in practice it is taxable -- this is a real change from the old rules." },
+    hochiminh: { sr: 15, tn: "Vietnam taxes residents on worldwide income at 5-35%." },
+    kualalumpur: { sr: 0, tn: "Territorial: Malaysia does not tax foreign-source income for individuals." },
+    kutalombok: { sr: 15, tn: "Indonesia taxes residents on worldwide income, progressive to 35%." },
+    siargao: { sr: 0, tn: "Resident foreigners in the Philippines are taxed only on Philippine-source income." },
+    taipei: { sr: 5, tn: "Taiwan reaches foreign income only through an alternative minimum tax above a high threshold, so the effective rate is usually low." },
+    seoul: { sr: 15, tn: "South Korea taxes foreign-source income only if remitted for the first five years, then on worldwide income." },
+    osaka: { sr: 20, tn: "For the first five years Japan taxes foreign income only if remitted; after that, worldwide income at rates to 55%." },
+    tokyo: { sr: 20, tn: "For the first five years Japan taxes foreign income only if remitted; after that, worldwide income at rates to 55%." },
+    singapore: { sr: 0, tn: "Foreign-source income received by individuals is generally not taxed." },
+    auckland: { sr: 20, tn: "New Zealand exempts most foreign income for the first four years as a transitional resident, then taxes worldwide income." },
+    melbourne: { sr: 28, tn: "Australia taxes residents on worldwide income, progressive to 45%." }
+  };
+
+  /* Anything absent falls back to a plain rate with standard treatment. */
+  function localTax(id) {
+    var t = LOCAL_TAX[id] || { sr: 0 };
+    return { sr: t.sr, ss: !!t.ss, xd: !!t.xd, tn: t.tn || "" };
+  }
+
+  /* US national average monthly spend for one adult, before lifestyle. */
+  var BASE_BUDGET = {
+    Housing: 1600, Food: 700, Transport: 500,
+    Insurance: 250, Discretionary: 550, Other: 200
+  };
+
+  /* Housing is shared; the rest scales closer to, but below, double. */
+  var COUPLE_HOUSING = 1.15;
+  var COUPLE_OTHER = 1.60;
+
+  var CATEGORIES = ["Housing", "Food", "Transport", "Insurance", "Discretionary", "Other"];
+
+  /* ------------------------------------------------------------- utilities */
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  var money = new Intl.NumberFormat("en-US", {
+    style: "currency", currency: "USD", maximumFractionDigits: 0
+  });
+
+  function num(id) {
+    var v = parseFloat($(id).value);
+    return isFinite(v) ? v : 0;
+  }
+
+  function clamp(x, lo, hi) { return Math.min(Math.max(x, lo), hi); }
+
+  function pct(x, digits) {
+    return (x * 100).toFixed(digits === undefined ? 1 : digits) + "%";
+  }
+
+  /* Sub-dollar amounts round to zero rather than printing a signed nothing. */
+  function taxLine(x) {
+    return x < 0.5 ? money.format(0) : "-" + money.format(x);
+  }
+
+  function signed(x) {
+    if (Math.abs(x) < 0.5) return money.format(0);
+    return (x > 0 ? "+" : "-") + money.format(Math.abs(x));
+  }
+
+  /* Progressive tax on `amount`, entered at `floor` of the bracket ladder. */
+  function ladderTax(brackets, floor, amount) {
+    var tax = 0, cursor = floor, remaining = amount;
+    for (var i = 0; i < brackets.length && remaining > 0; i++) {
+      var cap = brackets[i][0], rate = brackets[i][1];
+      if (cap <= cursor) continue;
+      var slice = Math.min(remaining, cap - cursor);
+      tax += slice * rate;
+      cursor += slice;
+      remaining -= slice;
+    }
+    return tax;
+  }
+
+  function topRate(brackets, taxable) {
+    var rate = brackets[0][1];
+    for (var i = 0; i < brackets.length; i++) {
+      if (taxable > brackets[i][0]) rate = brackets[i + 1] ? brackets[i + 1][1] : brackets[i][1];
+    }
+    return taxable <= 0 ? 0 : rate;
+  }
+
+  /* Which preferential rates the gain slice actually straddles. */
+  function ltcgRates(brackets, floor, amount) {
+    var used = [], cursor = floor, remaining = amount;
+    for (var i = 0; i < brackets.length && remaining > 0; i++) {
+      var cap = brackets[i][0], rate = brackets[i][1];
+      if (cap <= cursor) continue;
+      var slice = Math.min(remaining, cap - cursor);
+      if (slice > 0 && used.indexOf(rate) === -1) used.push(rate);
+      cursor += slice;
+      remaining -= slice;
+    }
+    return used;
+  }
+
+  /* Straight-line lookup on a [breakpoint, value] table. */
+  function interp(table, x) {
+    if (x <= table[0][0]) return table[0][1];
+    for (var i = 1; i < table.length; i++) {
+      if (x <= table[i][0]) {
+        var a = table[i - 1], b = table[i];
+        return a[1] + (b[1] - a[1]) * (x - a[0]) / (b[0] - a[0]);
+      }
+    }
+    return table[table.length - 1][1];
+  }
+
+  /*
+   * Inflation-index the parts of the code that are indexed in reality, and
+   * leave alone the parts statute freezes.
+   */
+  function scaleBrackets(t, f) {
+    var scalePair = function (row) { return [row[0] === Infinity ? Infinity : row[0] * f, row[1]]; };
+    return {
+      std: t.std * f, add65: t.add65 * f, people: t.people,
+      niit: t.niit,
+      ordinary: t.ordinary.map(scalePair),
+      ltcg: t.ltcg.map(scalePair),
+      ssBase: t.ssBase,
+      seniorPhase: t.seniorPhase * f,
+      rothPhase: [t.rothPhase[0] * f, t.rothPhase[1] * f],
+      irmaa: t.irmaa * f
+    };
+  }
+
+  /*
+   * The provisional-income test: half the benefit plus all other income,
+   * measured against two thresholds, caps the taxable share at 85%.
+   */
+  function taxableSocialSecurity(t, benefit, otherAgi) {
+    if (benefit <= 0) return 0;
+    var b1 = t.ssBase[0], b2 = t.ssBase[1];
+    var provisional = otherAgi + benefit / 2;
+    if (provisional <= b1) return 0;
+    if (provisional <= b2) return Math.min(.5 * (provisional - b1), .5 * benefit);
+    var tier1 = Math.min(.5 * (b2 - b1), .5 * benefit);
+    return Math.min(.85 * (provisional - b2) + tier1, .85 * benefit);
+  }
+
+  /*
+   * Claiming early costs 5/9 of 1% a month for the first three years and 5/12
+   * of 1% after; delaying past full retirement age earns 8% a year.
+   */
+  function ssFactor(claimAge) {
+    var months = (claimAge - FRA) * 12;
+    if (months >= 0) return 1 + (months / 12) * .08;
+    var early = -months;
+    var cut = Math.min(early, 36) * (5 / 9) / 100 + Math.max(0, early - 36) * (5 / 12) / 100;
+    return 1 - cut;
+  }
+
+  /* --------------------------------------------------------- health costing */
+
+  function acaAgeFactor(age) {
+    return interp(ACA_AGE_CURVE, clamp(age, 21, 64));
+  }
+
+  /*
+   * The share of income you are expected to contribute before the credit picks
+   * up the rest. Bands are explicit rather than interpolated across the whole
+   * range because the schedule steps at 133% rather than sloping through it.
+   */
+  function acaContribShare(ratio) {
+    for (var i = 0; i < ACA_BANDS.length; i++) {
+      var b = ACA_BANDS[i];
+      if (ratio <= b[2]) {
+        return b[2] === b[0] ? b[1] : b[1] + (b[3] - b[1]) * (ratio - b[0]) / (b[2] - b[0]);
+      }
+    }
+    return ACA_BANDS[ACA_BANDS.length - 1][3];
+  }
+
+  function irmaaSurcharge(t, magi) {
+    var base = t.irmaa, add = 0;
+    for (var i = 0; i < IRMAA_TIERS.length; i++) {
+      if (magi > base * IRMAA_TIERS[i][0]) add = IRMAA_TIERS[i][1] + IRMAA_TIERS[i][2];
+    }
+    return add;
+  }
+
+  /*
+   * Annual health cost for the household. Three regimes: private cover abroad
+   * at any age, Medicare from 65 in the US, and the ACA marketplace before
+   * that -- where the subsidy depends on the same AGI the tax side produced.
+   */
+  function healthCost(cfg, age, agi, fGen, fMed) {
+    var people = cfg.brackets.people;
+    var loc = cfg.location;
+
+    if (loc.m) {
+      return {
+        mode: "abroad", total: loc.m * people * fMed,
+        premium: loc.m * people * fMed, oop: 0, credit: 0, surcharge: 0
+      };
+    }
+
+    if (age >= MEDICARE_AGE) {
+      var sur = irmaaSurcharge(scaleBrackets(cfg.brackets, fGen), agi);
+      var premium = (PART_B + PART_D + MEDIGAP + sur) * 12 * people * fMed;
+      var oop = MEDICARE_OOP * 12 * people * fMed;
+      return {
+        mode: "medicare", total: premium + oop,
+        premium: premium, oop: oop, credit: 0, surcharge: sur * 12 * people * fMed
+      };
+    }
+
+    var full = 0;
+    for (var i = 0; i < people; i++) full += ACA_BASE_MONTHLY * acaAgeFactor(age);
+    full = full * 12 * fMed;
+
+    var fpl = (FPL_FIRST + FPL_EACH * (people - 1)) * fGen;
+    var ratio = fpl > 0 ? agi / fpl : 0;
+
+    /* Outside the 100%-400% corridor there is no credit in either direction. */
+    var cliff = ratio > ACA_CEILING;
+    var belowFloor = ratio < ACA_FLOOR;
+    var credit = (cliff || belowFloor)
+      ? 0
+      : Math.max(0, full - acaContribShare(ratio) * Math.max(agi, 0));
+    credit = Math.min(credit, full);
+
+    var aoop = ACA_OOP_MONTHLY * 12 * people * fMed;
+    return {
+      mode: "aca", total: full - credit + aoop,
+      premium: full, oop: aoop, credit: credit, surcharge: 0,
+      fplRatio: ratio, cliff: cliff, belowFloor: belowFloor,
+      floorAt: ACA_FLOOR * fpl, ceilingAt: ACA_CEILING * fpl
+    };
+  }
+
+  /* ------------------------------------------------------------ the config */
+
+  function locationById(id) {
+    for (var i = 0; i < LOCATIONS.length; i++) if (LOCATIONS[i].id === id) return LOCATIONS[i];
+    return LOCATIONS[0];
+  }
+
+  /* The local rate follows the location until the user overrides it. */
+  var stateRatePinned = false;
+
+  function readConfig() {
+    var brackets = TAX[$("status").value];
+    var age = clamp(Math.round(num("age")), 18, 100);
+    var loc = locationById($("location").value);
+    var rules = localTax(loc.id);
+    return {
+      age: age,
+      /* Clamped at both ends: an unclamped horizon renders a plan to age 3000. */
+      horizonAge: clamp(Math.round(num("horizon")), age + 1, 110),
+      inflation: clamp(num("inflation"), 0, 15) / 100,
+      medInflation: clamp(num("medInflation"), 0, 20) / 100,
+      totalReturn: num("returnRate") / 100,
+      yieldRate: clamp(num("yieldRate"), 0, 100) / 100,
+      ordShare: clamp(num("ordShare"), 0, 100) / 100,
+      drawPct: clamp(num("drawRate"), 0, 100),
+      ssFra: Math.max(0, num("ssFra")),
+      ssClaimAge: clamp(Math.round(num("ssClaimAge")), 62, 70),
+      otherIncome: Math.max(0, num("otherIncome")),
+      wageIncome: Math.max(0, num("wageIncome")),
+      wageYears: clamp(Math.round(num("wageYears")), 0, 60),
+      /* Born in 1960 or later pushes the first required distribution to 75. */
+      rmdAge: (THIS_YEAR - age) >= RMD_LATE_BIRTH_YEAR ? RMD_AGE_LATE : RMD_AGE_EARLY,
+      contribMonthly: Math.max(0, num("contribMonthly")),
+      rothMonthly: Math.max(0, num("rothMonthly")),
+      stateRate: (stateRatePinned ? clamp(num("stateRate"), 0, 100) : rules.sr) / 100,
+      localRules: rules,
+      abroad: !!loc.m,
+      treatyOffset: $("treatyOffset").checked,
+      niitOn: $("niitOn").checked,
+      volatility: clamp(num("volatility"), 0, 60) / 100,
+      brackets: brackets,
+      location: loc,
+      lifestyle: clamp(num("lifestyle"), 0, 400) / 100,
+      healthExtra: Math.max(0, num("costHealthExtra")),
+      realDollars: $("realDollars").checked
+    };
+  }
+
+  function initialState() {
+    var taxable = Math.max(0, num("taxableBal"));
+    var gainFrac = clamp(num("gainPct"), 0, 100) / 100;
+    return {
+      taxable: taxable,
+      deferred: Math.max(0, num("deferredBal")),
+      roth: Math.max(0, num("rothBal")),
+      basis: taxable * (1 - gainFrac)
+    };
+  }
+
+  /* --------------------------------------------------------- one year of it */
+
+  /*
+   * `year` is 1-based. Dividends and interest are taxed as they arrive;
+   * appreciation is taxed only through the gain embedded in the sale that
+   * funds the withdrawal.
+   */
+  function yearResult(cfg, state, year, drawPctOverride) {
+    var fGen = Math.pow(1 + cfg.inflation, year - 1);
+    var fMed = Math.pow(1 + cfg.medInflation, year - 1);
+    var t = scaleBrackets(cfg.brackets, fGen);
+    var age = cfg.age + year - 1;
+    var age65 = age >= MEDICARE_AGE;
+    var canTouchDeferred = age >= DEFERRED_AGE;
+
+    var drawRate = (drawPctOverride === undefined ? cfg.drawPct : drawPctOverride) / 100;
+    var total = state.taxable + state.deferred + state.roth;
+
+    /*
+     * The rate applies to the whole portfolio, but only some of it is legally
+     * reachable, so a wanted draw can exceed what is available.
+     */
+    var reachable = state.taxable + state.roth + (canTouchDeferred ? state.deferred : 0);
+    var wanted = total * drawRate;
+    var grossDraw = Math.min(wanted, reachable);
+
+    /* Ordered sourcing: brokerage, then tax-deferred if allowed, then Roth. */
+    var wTaxable = Math.min(grossDraw, state.taxable);
+    var rest = grossDraw - wTaxable;
+    var wDeferred = canTouchDeferred ? Math.min(rest, state.deferred) : 0;
+    rest -= wDeferred;
+    var wRoth = Math.min(rest, state.roth);
+
+    /*
+     * A required minimum distribution overrides the sourcing order entirely.
+     * From the RMD age the law forces money out of the tax-deferred account
+     * whether the withdrawal plan wanted it or not, measured against last
+     * year's closing balance -- which is exactly the balance we start with.
+     */
+    var rmd = age >= cfg.rmdAge ? state.deferred / ultDivisor(age) : 0;
+    var forcedRmd = Math.max(0, Math.min(rmd, state.deferred) - wDeferred);
+    wDeferred += forcedRmd;
+    grossDraw += forcedRmd;
+
+    var yieldIncome = state.taxable * cfg.yieldRate;
+    var ordYield = yieldIncome * cfg.ordShare;
+    var qualYield = yieldIncome - ordYield;
+
+    /* Selling consumes basis proportionally; only the gain above it is income. */
+    var gainFrac = state.taxable > 0
+      ? clamp((state.taxable - state.basis) / state.taxable, 0, 1)
+      : 0;
+    var realizedGain = wTaxable * gainFrac;
+    var basisSold = wTaxable - realizedGain;
+
+    var pref = qualYield + realizedGain;
+
+    /* A pension is for life; wages stop when the working years run out. */
+    var pension = cfg.otherIncome * fGen;
+    var wages = year <= cfg.wageYears ? cfg.wageIncome * fGen : 0;
+    var earned = pension + wages;
+
+    var socialSecurity = age >= cfg.ssClaimAge
+      ? cfg.ssFra * ssFactor(cfg.ssClaimAge) * fGen
+      : 0;
+
+    /*
+     * A deferral is limited twice over: by the statutory cap, and by the wages
+     * it comes out of -- you cannot defer income you never earned.
+     */
+    var deferralCap = (DEFERRAL_LIMIT + (age >= 50 ? DEFERRAL_CATCHUP : 0)) * fGen;
+    var contribWanted = cfg.contribMonthly * 12 * fGen;
+    var contribution = Math.min(contribWanted, deferralCap, wages);
+
+    var ordinaryBeforeSS = (earned - contribution) + ordYield + wDeferred;
+    var ssTaxable = taxableSocialSecurity(t, socialSecurity, ordinaryBeforeSS + pref);
+
+    var allOrdinary = ordinaryBeforeSS + ssTaxable;
+    var agi = allOrdinary + pref;
+
+    /*
+     * A Roth IRA is after-tax, so it never touches taxable income -- but it is
+     * bound three ways: the annual limit, the wages left after the 401(k)
+     * deferral, and a straight-line phaseout on income.
+     */
+    var iraCap = (IRA_LIMIT + (age >= 50 ? IRA_CATCHUP : 0)) * fGen;
+    var phase = t.rothPhase;
+    var phaseAllowance = agi <= phase[0] ? iraCap
+      : agi >= phase[1] ? 0
+      : iraCap * (1 - (agi - phase[0]) / (phase[1] - phase[0]));
+    var wagesLeft = Math.max(0, wages - contribution);
+    var rothWanted = cfg.rothMonthly * 12 * fGen;
+    var rothContribution = Math.min(rothWanted, iraCap, phaseAllowance, wagesLeft);
+
+    /* The senior deduction is per person and bleeds away above the threshold. */
+    var senior = age65
+      ? Math.max(0, SENIOR_DEDUCTION * fGen * t.people
+          - SENIOR_PHASEOUT_RATE * Math.max(0, agi - t.seniorPhase))
+      : 0;
+    var deductions = t.std + (age65 ? t.add65 * t.people : 0) + senior;
+
+    var taxableTotal = Math.max(0, agi - deductions);
+    var ordTaxable = Math.max(0, allOrdinary - deductions);
+    var prefTaxable = Math.max(0, taxableTotal - ordTaxable);
+
+    var fedOrd = ladderTax(t.ordinary, 0, ordTaxable);
+    var fedPref = ladderTax(t.ltcg, ordTaxable, prefTaxable);
+
+    var nii = yieldIncome + realizedGain;
+    var niit = cfg.niitOn
+      ? .038 * Math.min(nii, Math.max(0, agi - t.niit))
+      : 0;
+
+    /*
+     * Local tax -- the state, or the country. The base mirrors the federal one
+     * minus whatever this jurisdiction leaves alone: almost everywhere exempts
+     * Social Security, and a few states exempt retirement withdrawals entirely.
+     */
+    var lt = cfg.localRules;
+    var stateBase = taxableTotal;
+    if (!lt.ss) stateBase -= ssTaxable;
+    if (lt.xd) stateBase -= wDeferred;
+    stateBase = Math.max(0, stateBase);
+    var localGross = stateBase * cfg.stateRate;
+
+    /*
+     * Abroad, a treaty or the foreign tax credit generally stops the same money
+     * being taxed twice: you end up paying the higher of the two regimes rather
+     * than their sum. Without that relief the local bill lands on top.
+     */
+    var usFederal = fedOrd + fedPref + niit;
+    var stateTax = (cfg.abroad && cfg.treatyOffset)
+      ? Math.max(0, localGross - usFederal)
+      : localGross;
+
+    var totalTax = usFederal + stateTax;
+    var cashIn = grossDraw + socialSecurity + earned;
+
+    var health = healthCost(cfg, age, agi, fGen, fMed);
+
+    return {
+      year: year, age: age, age65: age65, canTouchDeferred: canTouchDeferred,
+      fGen: fGen, fMed: fMed, brackets: t,
+      total: total, reachable: reachable, wanted: wanted, grossDraw: grossDraw,
+      capped: wanted > grossDraw + 0.5,
+      cashIn: cashIn, socialSecurity: socialSecurity,
+      wages: wages, pension: pension, earned: earned,
+      rmd: rmd, forcedRmd: forcedRmd, rmdActive: age >= cfg.rmdAge,
+      wTaxable: wTaxable, wDeferred: wDeferred, wRoth: wRoth,
+      yieldIncome: yieldIncome, realizedGain: realizedGain, basisSold: basisSold,
+      ssTaxable: ssTaxable, deductions: deductions, agi: agi,
+      contribution: contribution, contribWanted: contribWanted, deferralCap: deferralCap,
+      rothContribution: rothContribution, rothWanted: rothWanted, iraCap: iraCap,
+      phaseAllowance: phaseAllowance, wagesLeft: wagesLeft,
+      fedOrd: fedOrd, fedPref: fedPref, niit: niit, stateTax: stateTax,
+      localGross: localGross, usFederal: usFederal,
+      /* What is contributed is saved, not spent, so it leaves spendable cash. */
+      totalTax: totalTax, net: cashIn - contribution - rothContribution - totalTax,
+      taxableTotal: taxableTotal, ordTaxable: ordTaxable, prefTaxable: prefTaxable,
+      health: health
+    };
+  }
+
+  /*
+   * Roll balances forward: growth in, withdrawal out, basis tracked. Cash you
+   * received but did not spend goes back into the brokerage rather than
+   * vanishing -- which matters most once a required distribution is forcing out
+   * more than you need, since otherwise the forced money looks like a loss
+   * instead of a transfer into a taxable account.
+   */
+  function stepYear(cfg, state, r, annualNeed, returnOverride) {
+    var surplus = annualNeed === undefined ? 0 : Math.max(0, r.net - annualNeed);
+    /* The stress tests hand in a different return for each year. */
+    var g = 1 + (returnOverride === undefined ? cfg.totalReturn : returnOverride);
+    return {
+      taxable: Math.max(0, state.taxable * g - r.wTaxable) + surplus,
+      /* This year's contributions land at year end, so they grow from next year. */
+      deferred: Math.max(0, state.deferred * g - r.wDeferred) + r.contribution,
+      roth: Math.max(0, state.roth * g - r.wRoth) + r.rothContribution,
+      /* Reinvested dividends and reinvested surplus are both after-tax money. */
+      basis: Math.max(0, state.basis + r.yieldIncome - r.basisSold) + surplus
+    };
+  }
+
+  /* ------------------------------------------------- sequence-of-returns risk */
+
+  /*
+   * A deliberately small, seeded generator: the same inputs must always produce
+   * the same answer, or changing one field tells you nothing about what it did.
+   */
+  function mulberry32(seed) {
+    var a = seed >>> 0;
+    return function () {
+      a = a + 0x6D2B79F5 >>> 0;
+      var t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+
+  /* Box-Muller, taking one standard normal per call. */
+  function standardNormal(rand) {
+    var u = 1 - rand();
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * rand());
+  }
+
+  /*
+   * Each scenario keeps the same long-run average as your steady assumption and
+   * only moves when the bad years land. The pairs are the point: an identical
+   * decade early and late produce very different endings.
+   */
+  var STRESS = [
+    { id: "base", label: "Your steady assumption",
+      ret: function (cfg) { return cfg.totalReturn; } },
+    { id: "flat10", label: "A lost decade first: 0% for ten years",
+      ret: function (cfg, y) { return y <= 10 ? 0 : cfg.totalReturn; } },
+    { id: "flat10late", label: "The same lost decade, twenty years in",
+      ret: function (cfg, y) { return (y >= 21 && y <= 30) ? 0 : cfg.totalReturn; } },
+    { id: "crash", label: "A 35% crash in year one",
+      ret: function (cfg, y) { return y === 1 ? -0.35 : cfg.totalReturn; } },
+    { id: "crashlate", label: "The same crash twenty years in",
+      ret: function (cfg, y) { return y === 21 ? -0.35 : cfg.totalReturn; } },
+    { id: "stag", label: "Fifteen years at zero real return",
+      ret: function (cfg, y) { return y <= 15 ? cfg.inflation : cfg.totalReturn; } }
+  ];
+
+  /*
+   * Walk the horizon once under an arbitrary per-year return. Returns the
+   * things that decide whether a plan held: the ending balance in today's
+   * money, the worst month, and when the shortfall started.
+   */
+  function runPath(cfg, state, budget, years, retFor) {
+    var walking = state, firstShort = null, shortYears = 0;
+    var lowest = Infinity, lastF = 1, broke = false;
+    for (var year = 1; year <= years; year++) {
+      var r = yearResult(cfg, walking, year);
+      var need = monthlyNeed(cfg, budget, r);
+      var mo = r.net / 12 / r.fGen;
+      if (mo < lowest) lowest = mo;
+      if (r.net / 12 < need.total - 0.5) {
+        shortYears++;
+        if (firstShort === null) firstShort = r.age;
+      }
+      if (r.total < 1) broke = true;
+      lastF = r.fGen;
+      walking = stepYear(cfg, walking, r, need.total * 12, retFor(cfg, year));
+    }
+    var ending = (walking.taxable + walking.deferred + walking.roth) / (lastF * (1 + cfg.inflation));
+    return {
+      ending: ending, lowest: lowest, firstShort: firstShort,
+      shortYears: shortYears, broke: broke || ending < 1
+    };
+  }
+
+  function percentile(sorted, p) {
+    if (!sorted.length) return 0;
+    var i = clamp(Math.floor(p * (sorted.length - 1)), 0, sorted.length - 1);
+    return sorted[i];
+  }
+
+  /* ------------------------------------------------------------- the budget */
+
+  /* What this location suggests for each category, before any pinning. */
+  function locationBudget(cfg, loc) {
+    var people = cfg.brackets.people;
+    var out = {};
+    CATEGORIES.forEach(function (key) {
+      var index = key === "Housing" ? loc.h : loc.x;
+      var household = key === "Housing"
+        ? (people > 1 ? COUPLE_HOUSING : 1)
+        : (people > 1 ? COUPLE_OTHER : 1);
+      out[key] = BASE_BUDGET[key] * index * household * cfg.lifestyle;
+    });
+    return out;
+  }
+
+  /* Pinned categories keep the user's number; the rest follow the location. */
+  var pinned = Object.create(null);
+
+  function currentBudget(cfg, loc) {
+    var suggested = locationBudget(cfg, loc || cfg.location);
+    var out = {};
+    CATEGORIES.forEach(function (key) {
+      out[key] = pinned[key] ? Math.max(0, num("cost" + key)) : suggested[key];
+    });
+    return out;
+  }
+
+  function budgetTotal(b) {
+    return CATEGORIES.reduce(function (sum, key) { return sum + b[key]; }, 0);
+  }
+
+  /* Monthly cost in year `year`: living grown by inflation, health by its own. */
+  function monthlyNeed(cfg, b, r) {
+    var living = budgetTotal(b) * r.fGen;
+    var health = r.health.total / 12 + cfg.healthExtra * r.fMed;
+    return { living: living, health: health, total: living + health };
+  }
+
+  /* ---------------------------------------------------------------- the UI */
+
+  /* The rate the user typed, held aside while the field mirrors the return. */
+  var manualDrawRate = $("drawRate").value;
+  var wasLocked = false;
+
+  function syncDrawRate() {
+    var locked = $("drawEqualsReturn").checked;
+    if (locked) {
+      /* A losing year earns nothing to draw, so mirror the clamped rate the
+         maths will actually use rather than a negative the field would hide. */
+      $("drawRate").value = String(clamp(num("returnRate"), 0, 100));
+    } else if (wasLocked) {
+      $("drawRate").value = manualDrawRate;
+    }
+    $("drawRate").disabled = locked;
+    $("drawControl").classList.toggle("locked", locked);
+    wasLocked = locked;
+  }
+
+  function fillRow(body, cells, cls) {
+    var tr = document.createElement("tr");
+    if (cls) tr.className = cls;
+    cells.forEach(function (text, i) {
+      var cell = document.createElement(i === 0 ? "th" : "td");
+      cell.textContent = text;
+      tr.appendChild(cell);
+    });
+    body.appendChild(tr);
+  }
+
+  function buildLocations() {
+    var sel = $("location");
+    LOCATIONS.forEach(function (loc) {
+      var opt = document.createElement("option");
+      opt.value = loc.id;
+      /* The national-average row already says United States; the rest need it. */
+      opt.textContent = (loc.m || loc.id === "us") ? loc.label : loc.label + " (US)";
+      sel.appendChild(opt);
+    });
+    sel.value = "us";
+  }
+
+  function writeBudgetInputs(b) {
+    CATEGORIES.forEach(function (key) {
+      var input = $("cost" + key);
+      if (!pinned[key]) input.value = String(Math.round(b[key]));
+      input.parentElement.classList.toggle("pinned", !!pinned[key]);
+    });
+  }
+
+  /* ------------------------------------------------------------- rendering */
+
+  function render() {
+    syncDrawRate();
+
+    var cfg = readConfig();
+    var state = initialState();
+
+    var years = cfg.horizonAge - cfg.age + 1;
+    $("horizonEcho").textContent = String(years);
+
+    /*
+     * Validate what was typed, not the clamped value -- otherwise an age below
+     * your own silently becomes a two-year plan with nothing to explain it.
+     */
+    var rawHorizon = Math.round(num("horizon"));
+    var horizonWarn = $("horizonWarn");
+    if (rawHorizon <= cfg.age) {
+      horizonWarn.hidden = false;
+      horizonWarn.textContent = "You asked to plan through age " + rawHorizon
+        + ", which is not after your current age of " + cfg.age + ". Using age "
+        + cfg.horizonAge + " instead, so the projection below is only "
+        + years + " years long.";
+    } else if (rawHorizon > cfg.horizonAge) {
+      horizonWarn.hidden = false;
+      horizonWarn.textContent = "You asked to plan through age " + rawHorizon
+        + ". This stops at " + cfg.horizonAge + ", which is as far as the mortality tables and "
+        + "the required-distribution schedule go.";
+    } else {
+      horizonWarn.hidden = true;
+    }
+
+    var wy = cfg.wageYears;
+    $("wageYearsEcho").innerHTML = wy === 0
+      ? "Set to zero, so the wages above never arrive. Raise it if you plan to keep working."
+      : "Wages run from age " + cfg.age + " through age " + (cfg.age + wy - 1)
+        + ", then stop for good. A pension keeps paying; this does not.";
+
+    var appreciation = cfg.totalReturn - cfg.yieldRate;
+    $("apprEcho").textContent = pct(appreciation);
+    $("yieldWarn").hidden = appreciation >= 0;
+    $("prefShareEcho").textContent = pct(1 - cfg.ordShare, 0);
+    $("realReturnEcho").textContent = pct(cfg.totalReturn - cfg.inflation);
+
+    var factor = ssFactor(cfg.ssClaimAge);
+    $("ssCutEcho").textContent = factor < 1
+      ? pct(1 - factor, 0) + " cut"
+      : factor > 1 ? pct(factor - 1, 0) + " increase" : "no change";
+    $("ssBenefitEcho").textContent = money.format(cfg.ssFra * factor);
+    var wait = cfg.ssClaimAge - cfg.age;
+    $("ssWaitEcho").innerHTML = wait <= 0
+      ? "Being paid now."
+      : "Starts in <b>" + wait + "</b> year" + (wait === 1 ? "" : "s") + ", at age "
+        + cfg.ssClaimAge + ".";
+
+    /* Budget first: the location fills any category the user has not pinned. */
+    var budget = currentBudget(cfg);
+    writeBudgetInputs(budget);
+
+    var r = yearResult(cfg, state, 1);
+    var need = monthlyNeed(cfg, budget, r);
+
+    renderIncome(cfg, state, r, need, budget);
+    renderCost(cfg, state, r, need, budget);
+    renderProjection(cfg, state, budget);
+    renderStress(cfg, state, budget);
+
+    $("tallyIncome").textContent = money.format(r.net / 12) + " / mo";
+    $("tallyCost").textContent = money.format(need.total) + " / mo";
+
+    savePlan();
+  }
+
+  /*
+   * The tax field follows wherever you said you live, until you overrule it --
+   * at which point it stays put so a change of city cannot quietly rewrite it.
+   */
+  function renderLocalTax(cfg, r) {
+    var lt = cfg.localRules;
+    var loc = cfg.location;
+
+    if (!stateRatePinned) $("stateRate").value = String(lt.sr);
+    $("stateControl").classList.toggle("pinned", stateRatePinned);
+    $("resetStateRate").hidden = !stateRatePinned;
+    $("treatyRow").hidden = !cfg.abroad;
+    $("rowStateLabel").textContent = cfg.abroad ? "Local income tax" : "State income tax";
+
+    var treatment = [];
+    treatment.push(lt.ss ? "Social Security is taxed" : "Social Security is exempt");
+    treatment.push(lt.xd
+      ? "tax-deferred withdrawals are exempt"
+      : "tax-deferred withdrawals are taxed");
+    treatment.push("capital gains and dividends are treated as ordinary income");
+
+    var lead = cfg.abroad
+      ? loc.label.split(",").pop().trim() + " taxes a resident at about "
+        + pct(cfg.stateRate, 1) + " on this income"
+      : loc.label + " comes to about " + pct(cfg.stateRate, 1);
+
+    $("localTaxEcho").textContent = lead + ", and " + treatment.join(", ") + "."
+      + (stateRatePinned ? " You have overridden the rate, so it no longer follows the location." : "");
+
+    var note = lt.tn;
+    if (cfg.abroad) {
+      note += (note ? " " : "")
+        + (cfg.treatyOffset
+          ? "A US citizen owes US federal tax wherever they live. With treaty relief assumed, you pay the "
+            + "higher of the two bills: US federal is " + money.format(r.usFederal)
+            + " and the local charge would be " + money.format(r.localGross) + ", so the extra here is "
+            + money.format(r.stateTax) + "."
+          : "Treaty relief is switched off, so the local charge of " + money.format(r.localGross)
+            + " lands on top of " + money.format(r.usFederal) + " of US federal tax. Real outcomes "
+            + "usually sit between these two settings, and much US-source investment income cannot be "
+            + "resourced under a treaty, so double taxation is a genuine risk rather than a hypothetical.");
+    }
+    $("localTaxNote").textContent = note;
+    $("localTaxNote").hidden = !note;
+  }
+
+  function renderIncome(cfg, state, r, need, budget) {
+    var monthlyNet = r.net / 12;
+
+    $("monthlyNet").textContent = money.format(monthlyNet);
+    $("annualNet").textContent = money.format(r.net);
+    /* With no cash coming in there is nothing to take a percentage of, even
+       though dividends can still generate a bill. */
+    $("effRate").textContent = r.cashIn > 0 ? pct(r.totalTax / r.cashIn) : "\u2014";
+
+    var gap = monthlyNet - need.total;
+    $("verdict").className = "verdict " + (gap >= 0 ? "surplus" : "shortfall");
+    $("verdictWord").textContent = gap >= 0 ? "Surplus" : "Shortfall";
+    $("verdictAmt").textContent = money.format(Math.abs(gap));
+    $("needEcho").textContent = "Against " + money.format(need.total)
+      + " / mo of costs in " + cfg.location.label + ", of which "
+      + money.format(need.health) + " is health care.";
+
+    $("ssTaxableEcho").textContent = money.format(r.ssTaxable);
+
+    $("rowGross").textContent = money.format(r.grossDraw);
+    $("rowFromTaxable").textContent = money.format(r.wTaxable);
+    $("rowFromDeferred").textContent = r.canTouchDeferred
+      ? money.format(r.wDeferred)
+      : "locked until 59.5";
+    $("rowFromRoth").textContent = money.format(r.wRoth);
+    $("rowRmdLine").hidden = r.forcedRmd < 0.5;
+    $("rowRmd").textContent = money.format(r.forcedRmd);
+    $("rowSS").textContent = money.format(r.socialSecurity);
+    $("rowOther").textContent = money.format(r.pension);
+    $("rowWages").textContent = money.format(r.wages);
+    $("rowCashIn").textContent = money.format(r.cashIn);
+    $("rowContrib").textContent = taxLine(r.contribution);
+
+    $("drawSourceEcho").textContent = money.format(r.wTaxable);
+    var drawWarn = $("drawWarn");
+    if (r.capped) {
+      drawWarn.hidden = false;
+      drawWarn.textContent = "A " + pct(cfg.drawPct / 100) + " draw wants "
+        + money.format(r.wanted) + ", but only " + money.format(r.reachable)
+        + " is reachable"
+        + (r.canTouchDeferred ? "" : " because the tax-deferred balance is locked until 59.5")
+        + ". Taking " + money.format(r.grossDraw) + ".";
+    } else if (!r.canTouchDeferred && r.wRoth > 0.5) {
+      drawWarn.hidden = false;
+      drawWarn.textContent = "The brokerage cannot cover this draw, so "
+        + money.format(r.wRoth) + " is coming out of the Roth before 59.5. That is only "
+        + "penalty-free to the extent it is contribution basis, which this does not track.";
+    } else {
+      drawWarn.hidden = true;
+    }
+
+    $("contribCapEcho").textContent = money.format(r.deferralCap / 12);
+    $("contribCapYear").textContent = money.format(r.deferralCap);
+    $("contribEcho").textContent = money.format(r.contribution / 12);
+
+    /*
+     * The input is monthly but both caps are annual, so always show the
+     * annualised figure -- otherwise the limit reads as larger than the entry.
+     */
+    var capWarn = $("contribWarn");
+    if (r.contribWanted > r.contribution + 0.5) {
+      var annualised = money.format(cfg.contribMonthly) + " a month comes to "
+        + money.format(r.contribWanted) + " a year, ";
+      var boundByLimit = r.contribWanted > r.deferralCap && r.deferralCap <= r.wages;
+      capWarn.hidden = false;
+      capWarn.textContent = annualised + (boundByLimit
+        ? "over the " + money.format(r.deferralCap) + " annual limit. Trimmed to "
+          + money.format(r.contribution / 12) + " a month."
+        : "more than the " + money.format(r.wages)
+          + " of wages it has to come out of. Trimmed to "
+          + money.format(r.contribution / 12) + " a month.");
+    } else {
+      capWarn.hidden = true;
+    }
+
+    $("rowRoth").textContent = taxLine(r.rothContribution);
+    $("rothCapEcho").textContent = money.format(Math.min(r.iraCap, r.phaseAllowance) / 12);
+    $("rothCapYear").textContent = money.format(Math.min(r.iraCap, r.phaseAllowance));
+    $("rothEcho").textContent = money.format(r.rothContribution / 12);
+
+    /* Name whichever of the three limits actually bit, tightest first. */
+    var rothWarn = $("rothWarn");
+    if (r.rothWanted > r.rothContribution + 0.5) {
+      var reasons = [
+        { cap: r.iraCap, msg: "over the " + money.format(r.iraCap) + " annual IRA limit" },
+        { cap: r.phaseAllowance, msg: "more than your income allows: at " + money.format(r.agi)
+            + " of income, Roth eligibility phases out between "
+            + money.format(r.brackets.rothPhase[0]) + " and "
+            + money.format(r.brackets.rothPhase[1]) },
+        { cap: r.wagesLeft, msg: "more than the " + money.format(r.wagesLeft)
+            + " of wages left after your 401(k) deferral" }
+      ];
+      var tightest = reasons.reduce(function (a, b) { return b.cap < a.cap ? b : a; });
+      rothWarn.hidden = false;
+      rothWarn.textContent = money.format(cfg.rothMonthly) + " a month comes to "
+        + money.format(r.rothWanted) + " a year, " + tightest.msg + ". Trimmed to "
+        + money.format(r.rothContribution / 12) + " a month.";
+    } else {
+      rothWarn.hidden = true;
+    }
+
+    $("rowOrd").textContent = taxLine(r.fedOrd);
+    $("rowPref").textContent = taxLine(r.fedPref);
+    $("rowNiit").textContent = taxLine(r.niit);
+    $("rowState").textContent = taxLine(r.stateTax);
+    $("rowNet").textContent = money.format(r.net);
+
+    $("rowYield").textContent = money.format(r.yieldIncome);
+    $("rowRealized").textContent = money.format(r.realizedGain);
+    $("rowDeferred").textContent = money.format(r.wDeferred);
+    $("rowSSTaxable").textContent = money.format(r.ssTaxable);
+    $("rowUntaxed").textContent = money.format(
+      r.basisSold + r.wRoth + (r.socialSecurity - r.ssTaxable));
+    $("rowStd").textContent = taxLine(r.deductions);
+    $("rowTaxable").textContent = money.format(r.taxableTotal);
+    $("rowBracket").textContent = pct(topRate(r.brackets.ordinary, r.ordTaxable), 0);
+
+    var rates = ltcgRates(r.brackets.ltcg, r.ordTaxable, r.prefTaxable);
+    $("rowLtcg").textContent = rates.length
+      ? rates.map(function (x) { return pct(x, 0); }).join(" + ")
+      : "\u2014";
+
+    /* AGI is not only a tax number: it prices health care too. */
+    var h = r.health;
+    var magi = $("magiNote");
+    if (h.mode === "aca") {
+      var verdict;
+      if (h.cliff) {
+        verdict = "zero -- above 400% there is none, and you pay the full "
+          + money.format(h.premium / 12) + " a month.";
+      } else if (h.belowFloor) {
+        verdict = "zero -- below 100% of the poverty line there is no credit either. Coverage "
+          + "would come from Medicaid in an expansion state, or nowhere in the ten that did not "
+          + "expand, so the " + money.format(h.premium / 12)
+          + " a month shown is the unsubsidised price.";
+      } else {
+        verdict = money.format(h.credit / 12) + " a month of the "
+          + money.format(h.premium / 12) + " premium. The credit survives between "
+          + money.format(h.floorAt) + " and " + money.format(h.ceilingAt) + " of income.";
+      }
+      magi.textContent = "This year's income of " + money.format(r.agi) + " is "
+        + (h.fplRatio * 100).toFixed(0) + "% of the poverty line, so the premium tax credit is "
+        + verdict;
+    } else if (h.mode === "medicare") {
+      magi.textContent = h.surcharge > 0.5
+        ? "At " + money.format(r.agi) + " of income you are paying an IRMAA surcharge of "
+          + money.format(h.surcharge / 12) + " a month on top of Medicare."
+        : "At " + money.format(r.agi) + " of income you are below the "
+          + money.format(r.brackets.irmaa) + " IRMAA threshold, so Medicare is at the standard rate.";
+    } else {
+      magi.textContent = "Outside the US neither the ACA credit nor Medicare applies, so income does "
+        + "not change what health cover costs -- age and country do.";
+    }
+
+    renderLocalTax(cfg, r);
+    renderSensitivity(cfg, state, budget);
+  }
+
+  /*
+   * Drawing more raises income, but it also raises AGI -- which prices health
+   * care. So every row has to cost its own health care, or the table flatters
+   * the larger draw by exactly the subsidy it would have destroyed.
+   */
+  function renderSensitivity(cfg, state, budget) {
+    var current = cfg.drawPct;
+    var rates = [3, 3.5, 4, 4.5, 5, 6];
+
+    /* Insert the live rate without duplicating a row it already sits on. */
+    var isNew = rates.every(function (x) { return Math.abs(x - current) > 1e-6; });
+    if (isNew) rates.push(current);
+    rates.sort(function (a, b) { return a - b; });
+
+    var body = $("sens").querySelector("tbody");
+    body.textContent = "";
+
+    var priced = rates.map(function (rate) {
+      var s = yearResult(cfg, state, 1, rate);
+      return { rate: rate, r: s, need: monthlyNeed(cfg, budget, s), mo: s.net / 12 };
+    });
+
+    priced.forEach(function (p) {
+      fillRow(body, [
+        p.rate.toFixed(1) + "%",
+        money.format(p.mo),
+        money.format(p.need.health),
+        signed(p.mo - p.need.total)
+      ], Math.abs(p.rate - current) <= 1e-6 ? "here" : "");
+    });
+
+    /* If a subsidy boundary sits inside this range, say where. */
+    var note = "";
+    for (var i = 1; i < priced.length; i++) {
+      var a = priced[i - 1], b = priced[i];
+      if (a.r.health.mode !== "aca" || b.r.health.mode !== "aca") continue;
+      if (!a.r.health.cliff && b.r.health.cliff) {
+        note = "Between a " + a.rate.toFixed(1) + "% and a " + b.rate.toFixed(1)
+          + "% draw your income crosses 400% of the poverty line, the premium tax credit "
+          + "disappears, and health care jumps from " + money.format(a.need.health) + " to "
+          + money.format(b.need.health) + " a month. Drawing more can leave you worse off.";
+      } else if (a.r.health.belowFloor && !b.r.health.belowFloor) {
+        note = "Below a " + b.rate.toFixed(1) + "% draw your income falls under the poverty line, "
+          + "where there is no premium tax credit at all -- coverage would come from Medicaid or "
+          + "not at all, so the full " + money.format(a.need.health) + " a month shown is the "
+          + "unsubsidised price.";
+      }
+    }
+    $("sensNote").textContent = note;
+  }
+
+  function renderCost(cfg, state, r, need, budget) {
+    var total = need.total;
+    $("costTotal").textContent = money.format(total);
+    $("costAnnual").textContent = money.format(total * 12);
+    $("costHealthShare").textContent = total > 0 ? pct(need.health / total, 0) : "\u2014";
+
+    var income = r.net / 12;
+    var gap = income - total;
+    $("costVerdict").className = "verdict " + (gap >= 0 ? "surplus" : "shortfall");
+    $("costVerdictWord").textContent = gap >= 0 ? "Covered by" : "Short by";
+    $("costVerdictAmt").textContent = money.format(Math.abs(gap));
+    $("costIncomeEcho").textContent = "Against " + money.format(income)
+      + " / mo of spendable income after tax.";
+
+    var loc = cfg.location;
+    var people = cfg.brackets.people;
+    /*
+     * Several of the cheapest places are cheap partly because there is no
+     * hospital -- a cost that shows up as risk rather than as a monthly figure.
+     */
+    $("locFar").hidden = !loc.far;
+    if (loc.far) {
+      $("locFar").textContent = "No full-service hospital within about an hour of "
+        + loc.label.split(",")[0] + ". The health figure here buys insurance, not access: "
+        + "anything serious means a drive or a flight to a city, air ambulance cover is a "
+        + "separate purchase, and this is the one cost that rises exactly when you are least "
+        + "able to travel for it.";
+    }
+    $("locNote").textContent = loc.m
+      ? "Outside the US. Housing runs about " + pct(loc.h, 0) + " of the US average and "
+        + "everything else about " + pct(loc.x, 0) + ". Medicare does not follow you here, so "
+        + "health care is private cover at every age."
+      : "Housing runs about " + pct(loc.h, 0) + " of the US national average and everything else "
+        + "about " + pct(loc.x, 0) + ". Health care follows the "
+        + (r.age65 ? "Medicare" : "ACA marketplace") + " rules for a household of "
+        + people + ".";
+
+    /* Categories, their share of the total, and the health lines. */
+    CATEGORIES.forEach(function (key) {
+      var v = budget[key] * r.fGen;
+      $("share" + key).textContent = total > 0 ? pct(v / total, 0) : "\u2014";
+    });
+    var modelled = r.health.total / 12;
+    var extra = cfg.healthExtra * r.fMed;
+    $("costHealthEcho").value = String(Math.round(modelled));
+    $("shareHealth").textContent = total > 0 ? pct(modelled / total, 0) : "\u2014";
+    $("shareHealthExtra").textContent = total > 0 ? pct(extra / total, 0) : "\u2014";
+
+    var otherFixed = budget.Insurance * r.fGen;
+    var rows = {
+      Housing: budget.Housing * r.fGen,
+      Food: budget.Food * r.fGen,
+      Transport: budget.Transport * r.fGen,
+      OtherFixed: otherFixed + budget.Other * r.fGen,
+      Discretionary: budget.Discretionary * r.fGen,
+      Health: need.health
+    };
+    Object.keys(rows).forEach(function (key) {
+      $("crow" + key).textContent = money.format(rows[key]);
+      var denom = Math.max(total, 1);
+      $("cseg" + key).style.flexGrow = rows[key] / denom;
+    });
+    $("crowTotal").textContent = money.format(total);
+
+    renderHealthLedger(cfg, r);
+    renderHealthProjection(cfg, state, budget);
+    renderCompare(cfg, state, r, income);
+  }
+
+  function renderHealthLedger(cfg, r) {
+    var h = r.health;
+    var body = $("healthLedger").querySelector("tbody");
+    body.textContent = "";
+    var people = cfg.brackets.people;
+    var warn = $("healthWarn");
+    warn.hidden = true;
+
+    var lines = [];
+    if (h.mode === "abroad") {
+      $("healthMode").textContent = "Private international or local cover in "
+        + cfg.location.label + ", for " + people + " " + (people === 1 ? "person" : "people")
+        + " aged " + r.age + ". No US programme applies.";
+      lines.push(["Annual premium, per person", money.format(cfg.location.m * r.fMed)]);
+      lines.push(["Household premium", money.format(h.premium)]);
+    } else if (h.mode === "medicare") {
+      $("healthMode").textContent = "Medicare, from age 65. Part B and Part D plus a Medigap plan "
+        + "and out-of-pocket spending, for " + people + " "
+        + (people === 1 ? "person" : "people") + ".";
+      lines.push(["Part B, per person / mo", money.format(PART_B * r.fMed)]);
+      lines.push(["Part D, per person / mo", money.format(PART_D * r.fMed)]);
+      lines.push(["Medigap, per person / mo", money.format(MEDIGAP * r.fMed)]);
+      lines.push(["IRMAA surcharge, household / mo", money.format(h.surcharge / 12)]);
+      lines.push(["Out of pocket, household / mo", money.format(h.oop / 12)]);
+    } else {
+      $("healthMode").textContent = "ACA marketplace, before 65. A benchmark silver plan for "
+        + people + " " + (people === 1 ? "person" : "people") + " aged " + r.age
+        + ", against a premium tax credit set by your income.";
+      lines.push(["Full premium, household / mo", money.format(h.premium / 12)]);
+      lines.push(["Income as a share of the poverty line", (h.fplRatio * 100).toFixed(0) + "%"]);
+      lines.push(["Premium tax credit / mo", taxLine(h.credit / 12)]);
+      lines.push(["Out of pocket, household / mo", money.format(h.oop / 12)]);
+      if (h.cliff) {
+        warn.hidden = false;
+        warn.textContent = "Your income is above 400% of the poverty line ("
+          + money.format(h.ceilingAt)
+          + "), so the credit is zero. Dividends and realised gains count toward that income, "
+          + "which is why a large brokerage account raises your premium as well as your tax.";
+      } else if (h.belowFloor) {
+        warn.hidden = false;
+        warn.textContent = "Your income is below 100% of the poverty line ("
+          + money.format(h.floorAt) + "), which is under the premium tax credit, not over it. "
+          + "There is no credit down here: in an expansion state you would be on Medicaid, and in "
+          + "the ten states that did not expand you would fall into the coverage gap with no "
+          + "subsidised option at all. The credit only exists between "
+          + money.format(h.floorAt) + " and " + money.format(h.ceilingAt) + ".";
+      }
+    }
+    lines.push(["Additional health spending / mo", money.format(cfg.healthExtra * r.fMed)]);
+
+    lines.forEach(function (line, i) {
+      var tr = document.createElement("tr");
+      if (i === lines.length - 1) tr.className = "subtotal";
+      var th = document.createElement("th");
+      th.textContent = line[0];
+      var td = document.createElement("td");
+      td.textContent = line[1];
+      tr.appendChild(th);
+      tr.appendChild(td);
+      body.appendChild(tr);
+    });
+
+    var tr = document.createElement("tr");
+    tr.className = "total";
+    var th = document.createElement("th");
+    th.textContent = "Total health care / mo";
+    var td = document.createElement("td");
+    td.textContent = money.format(h.total / 12 + cfg.healthExtra * r.fMed);
+    tr.appendChild(th);
+    tr.appendChild(td);
+    body.appendChild(tr);
+  }
+
+  /* Walk the whole horizon once, returning a row per year. */
+  function walk(cfg, state, budget) {
+    var rows = [], walking = state;
+    var years = Math.max(1, cfg.horizonAge - cfg.age + 1);
+    for (var year = 1; year <= years; year++) {
+      var r = yearResult(cfg, walking, year);
+      var need = monthlyNeed(cfg, budget, r);
+      rows.push({ r: r, need: need, start: walking });
+      walking = stepYear(cfg, walking, r, need.total * 12);
+    }
+    return rows;
+  }
+
+  function renderProjection(cfg, state, budget) {
+    var rows = walk(cfg, state, budget);
+    var body = $("proj").querySelector("tbody");
+    body.textContent = "";
+
+    var real = cfg.realDollars;
+    var firstShort = null, depleted = null;
+
+    rows.forEach(function (row) {
+      var r = row.r, d = real ? r.fGen : 1;
+      var mo = r.net / 12 / d;
+      var needMo = row.need.total / d;
+      var gap = mo - needMo;
+      if (gap < -0.5 && firstShort === null) firstShort = r.age;
+      if (r.total < 1 && depleted === null) depleted = r.age;
+
+      var cls = [];
+      if (r.year === 1) cls.push("here");
+      if (gap < -0.5) cls.push("short");
+      if (r.age === cfg.ssClaimAge || r.age === MEDICARE_AGE || r.age === 60
+          || r.age === cfg.rmdAge) cls.push("milestone");
+
+      fillRow(body, [
+        String(r.age),
+        money.format(r.total / d),
+        money.format(r.cashIn / d),
+        taxLine(r.totalTax / d),
+        money.format(mo),
+        money.format(row.need.health / d),
+        money.format(needMo),
+        signed(gap)
+      ], cls.join(" "));
+    });
+
+    var unit = real ? " in today's dollars" : " in nominal dollars";
+    var last = rows[rows.length - 1];
+    var lastD = real ? last.r.fGen : 1;
+    var parts = [];
+
+    parts.push("Spendable income "
+      + (Math.abs(rows[0].r.net / 12 - last.r.net / 12 / lastD) < 1 ? "holds at " : "moves from ")
+      + money.format(rows[0].r.net / 12) + " to "
+      + money.format(last.r.net / 12 / lastD) + " a month between age " + cfg.age
+      + " and " + last.r.age + unit + ".");
+
+    parts.push("Costs " + (real
+      ? "rise from " + money.format(rows[0].need.total) + " to "
+        + money.format(last.need.total / lastD) + " a month in today's dollars, because health "
+        + "care outruns general inflation."
+      : "rise from " + money.format(rows[0].need.total) + " to "
+        + money.format(last.need.total) + " a month."));
+
+    /* The number that decides whether this lasts: the real portfolio at the end. */
+    var startReal = rows[0].r.total;
+    var endReal = last.r.total / last.r.fGen;
+    var ratio = startReal > 0 ? endReal / startReal : 0;
+    parts.push("In today's dollars the portfolio "
+      + (ratio > 1.05 ? "grows from " : ratio < .95 ? "falls from " : "holds near ")
+      + money.format(startReal) + " to " + money.format(endReal) + " by age " + last.r.age
+      + " \u2014 " + pct(ratio, 0) + " of what you started with.");
+
+    /*
+     * The forced distribution is the one line item nobody plans for, so name it
+     * with the year it starts and the size it reaches.
+     */
+    var firstRmd = null, biggestRmd = 0, biggestAge = 0;
+    rows.forEach(function (row) {
+      if (row.r.forcedRmd > 0.5) {
+        if (firstRmd === null) firstRmd = row.r;
+        if (row.r.forcedRmd / row.r.fGen > biggestRmd) {
+          biggestRmd = row.r.forcedRmd / row.r.fGen;
+          biggestAge = row.r.age;
+        }
+      }
+    });
+    if (firstRmd) {
+      parts.push("Required minimum distributions begin at age " + cfg.rmdAge + ", forcing "
+        + money.format(firstRmd.forcedRmd / firstRmd.fGen)
+        + " of ordinary income out of the tax-deferred account that year and peaking at "
+        + money.format(biggestRmd) + " at age " + biggestAge + ", in today's dollars.");
+    }
+
+    $("projSummary").textContent = parts.join(" ");
+
+    var warn = $("projWarn");
+    if (depleted !== null) {
+      warn.hidden = false;
+      warn.textContent = "The portfolio is exhausted at age " + depleted
+        + ". Everything after that is Social Security and any pension alone.";
+    } else if (firstShort !== null) {
+      warn.hidden = false;
+      warn.textContent = "Income falls short of costs from age " + firstShort
+        + ". Note what does not happen: because you draw a percentage of whatever is left, the "
+        + "balance shrinks toward zero without ever formally hitting it, so the plan never fails "
+        + "outright \u2014 your income just keeps falling. A fixed-percentage rule cannot run out "
+        + "of money, only out of usefulness.";
+    } else if (ratio < .6) {
+      warn.hidden = false;
+      warn.textContent = "Costs are covered throughout, but the portfolio ends at only "
+        + pct(ratio, 0) + " of its real starting value. That leaves little margin for a bad "
+        + "decade of returns, a long-term care bill, or living past " + last.r.age + ".";
+    } else {
+      warn.hidden = true;
+    }
+  }
+
+  function renderStress(cfg, state, budget) {
+    var years = Math.max(1, cfg.horizonAge - cfg.age + 1);
+    $("stressEndAge").textContent = String(cfg.horizonAge);
+
+    var body = $("stress").querySelector("tbody");
+    body.textContent = "";
+
+    var results = STRESS.map(function (s) {
+      return { s: s, out: runPath(cfg, state, budget, years, s.ret) };
+    });
+
+    results.forEach(function (row) {
+      var o = row.out;
+      fillRow(body, [
+        row.s.label,
+        money.format(o.ending),
+        money.format(o.lowest),
+        o.firstShort === null ? "never" : "age " + o.firstShort,
+        o.shortYears ? String(o.shortYears) : "0"
+      ], (row.s.id === "base" ? "here" : "") + (o.shortYears ? " short" : ""));
+    });
+
+    /* The paired scenarios are the lesson, so state the comparison outright. */
+    function find(id) {
+      for (var i = 0; i < results.length; i++) if (results[i].s.id === id) return results[i].out;
+      return null;
+    }
+    var early = find("flat10"), late = find("flat10late");
+    var note = "";
+    if (early && late) {
+      var diff = late.ending - early.ending;
+      if (Math.abs(diff) < 1000) {
+        note = "Here the timing barely matters, which usually means the plan is not leaning on the portfolio "
+          + "much -- Social Security and other income are carrying it.";
+      } else {
+        note = "Same ten flat years, same average return, twenty years apart: "
+          + money.format(early.ending) + " left if they come first against "
+          + money.format(late.ending) + " if they come later, a difference of "
+          + money.format(Math.abs(diff)) + ". That gap is sequence-of-returns risk, and no average "
+          + "return can show it to you.";
+      }
+    }
+    $("stressNote").textContent = note;
+  }
+
+  /*
+   * A thousand random sequences. Run on demand rather than on every keystroke,
+   * because it is thousands of times the work of the tables above.
+   */
+  function runMonteCarlo() {
+    var cfg = readConfig();
+    var state = initialState();
+    var budget = currentBudget(cfg);
+    var years = Math.max(1, cfg.horizonAge - cfg.age + 1);
+    var paths = 1000;
+
+    /* Seeded from the inputs that matter, so the answer is reproducible. */
+    var seed = Math.round(1000 * (cfg.totalReturn + cfg.volatility + cfg.drawPct
+      + cfg.age + years + cfg.inflation)) >>> 0;
+    var rand = mulberry32(seed || 1);
+
+    var endings = [], successes = 0, broke = 0, shorts = [];
+    var t0 = (window.performance || Date).now();
+
+    for (var p = 0; p < paths; p++) {
+      /* One pre-drawn sequence per path, so runPath stays a pure walk. */
+      var seq = new Array(years + 1);
+      for (var y = 1; y <= years; y++) {
+        seq[y] = cfg.totalReturn + cfg.volatility * standardNormal(rand);
+      }
+      var out = runPath(cfg, state, budget, years, function (c, yy) { return seq[yy]; });
+      endings.push(out.ending);
+      shorts.push(out.shortYears);
+      if (out.shortYears === 0) successes++;
+      if (out.broke) broke++;
+    }
+
+    var ms = Math.round((window.performance || Date).now() - t0);
+    endings.sort(function (a, b) { return a - b; });
+    shorts.sort(function (a, b) { return a - b; });
+
+    $("mcSuccess").textContent = pct(successes / paths, 1) + " of 1,000";
+    $("mcShort").textContent = String(percentile(shorts, .5));
+    $("mcP10").textContent = money.format(percentile(endings, .10));
+    $("mcP50").textContent = money.format(percentile(endings, .50));
+    $("mcP90").textContent = money.format(percentile(endings, .90));
+    $("mcBroke").textContent = pct(broke / paths, 1) + " of 1,000";
+    $("mcOut").hidden = false;
+
+    $("mcNote").textContent = "Ran in " + ms + " ms at " + pct(cfg.volatility, 0)
+      + " volatility around a " + pct(cfg.totalReturn) + " average. Returns are drawn independently "
+      + "from a normal distribution, which is kinder than reality: real markets have fatter tails and "
+      + "crashes cluster, so treat this success rate as an optimistic bound rather than a probability.";
+
+    $("mcWarn").hidden = cfg.volatility > 0;
+    if (cfg.volatility <= 0) {
+      $("mcWarn").textContent = "Volatility is set to zero, so every run is identical and this tells you "
+        + "nothing. Set it to something like 15% to see the spread.";
+    }
+  }
+
+  /* ------------------------------------------------- persistence and sharing */
+
+  var PERSIST = [
+    "age", "horizon", "inflation", "medInflation", "taxableBal", "deferredBal", "rothBal",
+    "gainPct", "returnRate", "volatility", "yieldRate", "ordShare", "drawRate", "drawEqualsReturn",
+    "ssFra", "ssClaimAge", "otherIncome", "wageIncome", "wageYears", "contribMonthly", "rothMonthly",
+    "status", "stateRate", "treatyOffset", "niitOn", "realDollars",
+    "location", "lifestyle", "costHousing", "costFood", "costTransport", "costInsurance",
+    "costDiscretionary", "costOther", "costHealthExtra"
+  ];
+
+  var STORE_KEY = "erp-plan-v1";
+  var CODE_VERSION = "1";
+
+  function serializePlan() {
+    var parts = [CODE_VERSION];
+    PERSIST.forEach(function (id) {
+      var e = $(id);
+      parts.push(e.type === "checkbox" ? (e.checked ? "1" : "0") : e.value);
+    });
+    parts.push(CATEGORIES.filter(function (k) { return pinned[k]; }).join("."));
+    parts.push(stateRatePinned ? "1" : "0");
+    return parts.join("~");
+  }
+
+  /* Returns true only if the code parsed; a bad paste must change nothing. */
+  function applyPlan(code) {
+    if (!code) return false;
+    var parts = String(code).trim().split("~");
+    if (parts[0] !== CODE_VERSION || parts.length < PERSIST.length + 1) return false;
+    PERSIST.forEach(function (id, i) {
+      var e = $(id), v = parts[i + 1];
+      if (v === undefined) return;
+      if (e.type === "checkbox") e.checked = v === "1";
+      else e.value = v;
+    });
+    CATEGORIES.forEach(function (k) { delete pinned[k]; });
+    var pins = parts[PERSIST.length + 1];
+    if (pins) pins.split(".").forEach(function (k) {
+      if (CATEGORIES.indexOf(k) >= 0) pinned[k] = true;
+    });
+    stateRatePinned = parts[PERSIST.length + 2] === "1";
+    /* A restored draw rate is the one to fall back on when unlocking. */
+    manualDrawRate = $("drawRate").value;
+    return true;
+  }
+
+  var urlTimer = null;
+
+  function savePlan() {
+    var code = serializePlan();
+    $("planCode").value = code;
+    try { localStorage.setItem(STORE_KEY, code); } catch (e) { /* private mode */ }
+    /* Writing the hash is throttled: it is cosmetic, and it touches history. */
+    if (urlTimer) clearTimeout(urlTimer);
+    urlTimer = setTimeout(function () {
+      try {
+        history.replaceState(null, "", location.pathname + location.search + "#p=" + code);
+      } catch (e) { /* framed or opaque origin */ }
+    }, 500);
+  }
+
+  function loadPlan() {
+    var fromHash = null;
+    try {
+      var m = /[#&]p=([^&]+)/.exec(location.hash || "");
+      if (m) fromHash = decodeURIComponent(m[1]);
+    } catch (e) { fromHash = null; }
+    if (applyPlan(fromHash)) return "link";
+    var stored = null;
+    try { stored = localStorage.getItem(STORE_KEY); } catch (e) { stored = null; }
+    if (applyPlan(stored)) return "browser";
+    return "defaults";
+  }
+
+  function flash(msg) {
+    $("shareMsg").textContent = msg;
+    setTimeout(function () { $("shareMsg").textContent = ""; }, 2500);
+  }
+
+  function renderHealthProjection(cfg, state, budget) {
+    var rows = walk(cfg, state, budget);
+    var body = $("healthProj").querySelector("tbody");
+    body.textContent = "";
+
+    /* Every fifth year, plus the two ages that change the health regime. */
+    var wanted = {};
+    rows.forEach(function (row, i) {
+      var age = row.r.age;
+      if (i === 0 || i === rows.length - 1) wanted[age] = true;
+      if (age % 5 === 0) wanted[age] = true;
+      if (age === MEDICARE_AGE || age === MEDICARE_AGE - 1) wanted[age] = true;
+    });
+
+    rows.forEach(function (row) {
+      if (!wanted[row.r.age]) return;
+      var d = row.r.fGen;
+      var mo = row.r.net / 12 / d;
+      var needMo = row.need.total / d;
+      fillRow(body, [
+        String(row.r.age),
+        money.format(row.need.health / d),
+        money.format(needMo),
+        signed(mo - needMo)
+      ], row.r.age === MEDICARE_AGE ? "milestone" : (mo - needMo < -0.5 ? "short" : ""));
+    });
+  }
+
+  function renderCompare(cfg, state, r, income) {
+    var body = $("compare").querySelector("tbody");
+    body.textContent = "";
+
+    var rowsData = LOCATIONS.map(function (loc) {
+      var b = currentBudget(cfg, loc);
+      /*
+       * Each row is priced entirely in its own jurisdiction: the budget, the
+       * health regime, and the local tax all move together. Using one income
+       * figure across every row would credit Portugal with Florida's tax bill.
+       */
+      var alt = Object.create(cfg);
+      alt.location = loc;
+      alt.localRules = localTax(loc.id);
+      alt.abroad = !!loc.m;
+      alt.stateRate = alt.localRules.sr / 100;
+      var ar = yearResult(alt, state, 1);
+      var living = budgetTotal(b);
+      var health = ar.health.total / 12 + cfg.healthExtra * r.fMed;
+      return {
+        loc: loc, housing: b.Housing, other: living - b.Housing,
+        health: health, total: living + health, income: ar.net / 12
+      };
+    });
+
+    /* Ranked by what is actually left over, which is the decision. */
+    rowsData.sort(function (a, b) {
+      return (b.income - b.total) - (a.income - a.total);
+    });
+
+    rowsData.forEach(function (d) {
+      var gap = d.income - d.total;
+      var cls = d.loc.id === cfg.location.id ? "here" : "";
+      if (gap < -0.5) cls += " short";
+      fillRow(body, [
+        d.loc.label,
+        money.format(d.housing),
+        money.format(d.other),
+        money.format(d.health),
+        money.format(d.total),
+        money.format(d.income),
+        signed(gap)
+      ], cls.trim());
+    });
+  }
+
+  /* ------------------------------------------------------------------ wiring */
+
+  buildLocations();
+
+  /* Editing a category pins it, so a change of city leaves it alone. */
+  CATEGORIES.forEach(function (key) {
+    $("cost" + key).addEventListener("input", function () { pinned[key] = true; });
+  });
+
+  $("resetBudget").addEventListener("click", function () {
+    CATEGORIES.forEach(function (key) { delete pinned[key]; });
+    render();
+  });
+
+  /* Touching the rate pins it; the button hands control back to the location. */
+  $("stateRate").addEventListener("input", function () { stateRatePinned = true; });
+
+  $("resetStateRate").addEventListener("click", function () {
+    stateRatePinned = false;
+    render();
+  });
+
+  $("runMc").addEventListener("click", runMonteCarlo);
+
+  $("copyPlan").addEventListener("click", function () {
+    var field = $("planCode");
+    field.select();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(field.value).then(
+        function () { flash("Copied."); },
+        function () { flash("Select the field and copy manually."); });
+    } else {
+      flash("Select the field and copy manually.");
+    }
+  });
+
+  $("loadPlan").addEventListener("click", function () {
+    if (applyPlan($("planCode").value)) {
+      render();
+      flash("Plan loaded.");
+    } else {
+      flash("That does not look like a plan code.");
+    }
+  });
+
+  $("resetPlan").addEventListener("click", function () {
+    try { localStorage.removeItem(STORE_KEY); } catch (e) { /* private mode */ }
+    try { history.replaceState(null, "", location.pathname + location.search); } catch (e) { /* framed */ }
+    location.reload();
+  });
+
+  /* Runs before the form-level handler, so the saved rate is current. */
+  $("drawRate").addEventListener("input", function () {
+    if (!$("drawEqualsReturn").checked) manualDrawRate = $("drawRate").value;
+  });
+
+  var TABS = [
+    { tab: "tabIncome", panel: "panelIncome" },
+    { tab: "tabCost", panel: "panelCost" }
+  ];
+
+  function selectTab(id) {
+    TABS.forEach(function (entry) {
+      var on = entry.tab === id;
+      $(entry.tab).setAttribute("aria-selected", on ? "true" : "false");
+      $(entry.tab).tabIndex = on ? 0 : -1;
+      $(entry.panel).hidden = !on;
+    });
+    $(id).focus();
+  }
+
+  TABS.forEach(function (entry, i) {
+    $(entry.tab).addEventListener("click", function () { selectTab(entry.tab); });
+    $(entry.tab).addEventListener("keydown", function (e) {
+      var step = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+      if (!step) return;
+      e.preventDefault();
+      selectTab(TABS[(i + step + TABS.length) % TABS.length].tab);
+    });
+  });
+
+  /* Enter in a number field would otherwise submit and reload the page. */
+  $("form").addEventListener("submit", function (e) { e.preventDefault(); });
+
+  $("form").addEventListener("input", render);
+  $("form").addEventListener("change", render);
+
+  /* A shared link wins over this browser's memory, which wins over defaults. */
+  var restored = loadPlan();
+  $("saveState").textContent = restored === "link"
+    ? "Loaded from the link you opened. Every change from here is saved in this browser automatically."
+    : restored === "browser"
+      ? "Restored from this browser, where it was saved the last time you were here."
+      : "Every figure you enter is saved in this browser automatically, so closing the tab will not lose it.";
+
+  render();
+</script>
